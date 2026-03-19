@@ -1,0 +1,6 @@
+class Chicken extends MovableObject{
+   
+
+
+      
+}
