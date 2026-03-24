@@ -2,12 +2,12 @@ class MovableObject {
      x = 120;
      y = 250;
      img;
-     height = 200;
+     height = 150;
      width = 100;
 
-
+  // ladImage('img/test.png');
 loadImage (path) {
-     this.img = new Image();
+     this.img = new Image(); // this.img = document.getElementById('image') <img id="image" src>
      this.img.src = path;
 }
 
