@@ -8,6 +8,22 @@ class MovableObject {
      currentImage = 0;
      speed = 0.15;
      otherDirection = false;
+     speedY = 0;
+     acceleration = 2.5;
+
+
+     applayGrravity() {
+          setInterval(() => {
+               if (this.isAboveGround()) {
+                    this.y -= this.speedY;
+                    this.speedY -= this.acceleration;
+               }
+          }, 1000 / 25);
+     }
+
+     isAboveGround() {
+          return this.y < 200;
+     }
 
 
      // ladImage('img/test.png');
