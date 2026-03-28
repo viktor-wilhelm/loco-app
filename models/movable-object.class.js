@@ -14,7 +14,7 @@ class MovableObject {
 
      applayGrravity() {
           setInterval(() => {
-               if (this.isAboveGround()) {
+               if (this.isAboveGround() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= this.acceleration;
                }
@@ -24,7 +24,6 @@ class MovableObject {
      isAboveGround() {
           return this.y < 200;
      }
-
 
      // ladImage('img/test.png');
      loadImage(path) {
@@ -44,7 +43,6 @@ class MovableObject {
           });
      }
 
-
      playAnimation(images) {
           let i = this.currentImage % this.IMAGES_WALKING.length; // let i = 7 % 6; => 1, Rest 1
           let path = images[i];
@@ -52,12 +50,16 @@ class MovableObject {
           this.currentImage++;
      }
 
-
      moveRight() {
           console.log('Moving right');
      }
 
      moveLeft() {
           this.x -= this.speed;
+     }
+
+
+     jump() {
+          this.speedY = 30;
      }
 }
