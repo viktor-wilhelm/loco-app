@@ -17,10 +17,10 @@ class World {
         this.character.world = this;
     }
 
-    
-    
-    
-    
+
+
+
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -31,7 +31,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.level.enemies);
-        
+
         this.ctx.translate(-this.camera_x, 0);
 
         // draw() wird immer wieder aufgerufen
@@ -55,6 +55,12 @@ class World {
             mo.x = mo.x * -1;
         }
         this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+        this.ctx.beginPath();
+        this.ctx.lineWidth = '1';
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.rect(mo.x, mo.y, mo.width, mo.height);
+        this.ctx.stroke();
+
         if (mo.otherDirection) {
             mo.x = mo.x * -1;
             this.ctx.restore();
