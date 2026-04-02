@@ -114,8 +114,9 @@ start index.html        # Windows
 ## Author
 
 **Viktor Wilhelm**
-- Email: [hello@viktor-wilhelm.de](mailto:hello@viktor-wilhelm.de)
-- LinkedIn: [viktor-wilhelm-802b4a332](https://www.linkedin.com/in/viktor-wilhelm-802b4a332/)
+
+[![Email](https://img.shields.io/badge/hello%40viktor--wilhelm.de-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:hello@viktor-wilhelm.de)
+[![LinkedIn](https://img.shields.io/badge/viktor--wilhelm-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/viktor-wilhelm-802b4a332/)
 
 ## License
 
