@@ -1,0 +1,53 @@
+# System-Dateien
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor-Verzeichnisse
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporäre Dateien
+*.tmp
+*.temp
+~$*
+
+# Node (falls npm-Pakete für Tools verwendet werden)
+node_modules/
+package-lock.json
+
+# Build-Ausgaben
+dist/
+build/
+
+# Betriebssystem
+*.bak
+*.orig
+
+# Adobe Illustrator Quelldateien
+*.ai
+img/1_editables/
+
+# Preview / Dokumentations-GIFs
+img/3_enemies_chicken/**/*.gif
+img/4_enemie_boss_chicken/*.gif
+img/6_salsa_bottle/*.gif
+
+# Übersichtsbilder & Beispiele
+img/5_background/complete_background.png
+img/5_background/first_half_background.png
+img/5_background/second_half_background.png
+img/7_statusbars/all_statusbars.png
+img/7_statusbars/example_*.png
+img/9_intro_outro_screens/**/*example*.png
+
+# Zip-Datei
+*.zip
+
+
