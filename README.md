@@ -115,8 +115,9 @@ start index.html        # Windows
 
 **Viktor Wilhelm**
 
-[![Email](https://img.shields.io/badge/hello%40viktor--wilhelm.de-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:hello@viktor-wilhelm.de)
-[![LinkedIn](https://img.shields.io/badge/viktor--wilhelm-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/viktor-wilhelm-802b4a332/)
+[![Email](https://img.shields.io/badge/Email-hello%40viktor--wilhelm.de-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:hello@viktor-wilhelm.de)
+[![GitHub](https://img.shields.io/badge/GitHub-viktor--wilhelm-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/viktor-wilhelm)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-viktor--wilhelm-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/viktor-wilhelm-802b4a332/)
 
 ## License
 
