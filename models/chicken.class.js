@@ -1,5 +1,4 @@
 class Chicken extends MovableObject {
-
   height = 70;
   width = 70;
   y = 355;
@@ -20,8 +19,6 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
-
-  
   animate() {
     setInterval(() => {
       this.moveLeft();
