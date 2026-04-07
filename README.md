@@ -2,7 +2,7 @@
 
 A browser-based 2D jump-and-run game built with vanilla JavaScript, HTML5 Canvas, and CSS. You play as Pepe — a man on a mission to defeat the end boss and his army of chickens.
 
-![El Pollo Loco Screenshot](img/screenshots/el-pollo-loco.png)
+![El Pollo Loco Screenshot](img/9_intro_outro_screens/start/startscreen_1.png)
 
 ## Demo
 
@@ -10,13 +10,13 @@ A browser-based 2D jump-and-run game built with vanilla JavaScript, HTML5 Canvas
 
 ## Gameplay
 
-| Action | Key |
-|---|---|
-| Move right | `→` Arrow Right |
-| Move left | `←` Arrow Left |
-| Jump | `↑` Arrow Up or `Space` |
-| Duck | `↓` Arrow Down |
-| Throw bottle | `D` |
+| Action       | Key                     |
+| ------------ | ----------------------- |
+| Move right   | `→` Arrow Right         |
+| Move left    | `←` Arrow Left          |
+| Jump         | `↑` Arrow Up or `Space` |
+| Duck         | `↓` Arrow Down          |
+| Throw bottle | `D`                     |
 
 - Collect **coins** to increase your score
 - Collect **salsa bottles** to fill your throw inventory
@@ -41,14 +41,14 @@ DrawableObject
 
 **Core files:**
 
-| File | Responsibility |
-|---|---|
-| `js/game.js` | Entry point — initialises canvas, world, and keyboard |
-| `models/world.class.js` | Game loop, collision detection, draw cycle |
-| `models/character.class.js` | Player input, animation states, physics |
-| `models/level.class.js` | Level data container |
-| `levels/level1.js` | Enemy, coin, bottle, and background placement |
-| `js/assets.js` | Centralised image/audio asset registry |
+| File                        | Responsibility                                        |
+| --------------------------- | ----------------------------------------------------- |
+| `js/game.js`                | Entry point — initialises canvas, world, and keyboard |
+| `models/world.class.js`     | Game loop, collision detection, draw cycle            |
+| `models/character.class.js` | Player input, animation states, physics               |
+| `models/level.class.js`     | Level data container                                  |
+| `levels/level1.js`          | Enemy, coin, bottle, and background placement         |
+| `js/assets.js`              | Centralised image/audio asset registry                |
 
 ## Project Structure
 
@@ -91,18 +91,19 @@ start index.html        # Windows
 ```
 
 > For features that require a local server (e.g. audio autoplay policies), use:
+>
 > ```bash
 > npx serve .
 > ```
 
 ## Browser Support
 
-| Browser | Status |
-|---|---|
-| Chrome / Edge (latest) | ✓ Supported |
-| Firefox (latest) | ✓ Supported |
-| Safari (latest) | ✓ Supported |
-| Mobile (landscape) | ✓ Touch controls |
+| Browser                | Status           |
+| ---------------------- | ---------------- |
+| Chrome / Edge (latest) | ✓ Supported      |
+| Firefox (latest)       | ✓ Supported      |
+| Safari (latest)        | ✓ Supported      |
+| Mobile (landscape)     | ✓ Touch controls |
 
 ## Contributing
 
