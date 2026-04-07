@@ -6,7 +6,7 @@ class Endboss extends MovableObject {
   constructor() {
     super().loadImage(IMAGES_ENDBOSS_WALKING[0]);
     this.loadImages(IMAGES_ENDBOSS_WALKING);
-    this.x = 2500;
+    this.x = 719 * 9; // Endboss am Ende der Karte platzieren
     this.animate();
   }
 

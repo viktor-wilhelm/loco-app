@@ -48,6 +48,8 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = "#5dbde0";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.addBackgroundObjectsParallax(this.level.backgroundObjects);
     this.addBackgroundObjectsParallax(this.level.clouds);
@@ -62,7 +64,7 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
 
-    this.ctx.translate(-this.camera_x, 0);
+    this.ctx.translate(-this.camera_x, 0); // Backwards
 
     // draw() wird immer wieder aufgerufen
     let self = this;
