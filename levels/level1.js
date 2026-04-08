@@ -1,7 +1,7 @@
 function createBackgrounds() {
   const backgrounds = [];
   const layers = [
-    { path: "img/5_background/layers/air_1920-1080px.png", speed: 0, variant: false },
+    { path: "img/5_background/layers/air_1920-1080px.png", speed: 0.0, variant: false },
     { path: "img/5_background/layers/3_third_layer/{n}.png", speed: 0.1, variant: true },
     { path: "img/5_background/layers/2_second_layer/{n}.png", speed: 0.2, variant: true },
     { path: "img/5_background/layers/1_first_layer/{n}.png", speed: 0.3, variant: true },
