@@ -22,7 +22,7 @@ class Character extends MovableObject {
         this.otherDirection = false;
       }
 
-      if (this.world.keyboard.LEFT && this.x > -880) {
+      if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
         this.otherDirection = true;
       }
