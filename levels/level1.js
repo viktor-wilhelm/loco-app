@@ -18,7 +18,7 @@ function createBackgrounds() {
 }
 
 const level1 = new Level(
-  [new Chicken(), new Chicken(), new Chicken(), new Endboss()],
+  [...Array(20).fill(null).map(() => new Chicken()), new Endboss()],
   [
     new Cloud(),
     new Cloud(),
