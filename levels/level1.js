@@ -1,3 +1,7 @@
+function createObjects(count, factory) {
+  return Array.from({ length: count }, factory);
+}
+
 function createBackgrounds() {
   const backgrounds = [];
   const layers = [
@@ -18,18 +22,7 @@ function createBackgrounds() {
 }
 
 const level1 = new Level(
-  [...Array(20).fill(null).map(() => new Chicken()), new Endboss()],
-  [
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-    new Cloud(),
-  ],
+  [...createObjects(20, () => new Chicken()), ...createObjects(25, () => new SmallChicken()), new Endboss()],
+  createObjects(20, (_, i) => new Cloud(i * 350)),
   createBackgrounds(),
 );
