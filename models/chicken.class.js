@@ -2,11 +2,12 @@ class Chicken extends MovableObject {
   height = 70;
   width = 70;
   y = 355;
+  offset = { top: 5, bottom: 5, left: 5, right: 5 };
   IMAGES_WALKING = IMAGES_CHICKEN_WALKING;
 
   currentImage = 0;
   constructor() {
-    super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
+    super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
 
     this.x = 200 + Math.random() * 10000; // Zahl zwischen 200 und 10200

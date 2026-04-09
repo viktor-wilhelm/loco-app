@@ -1,3 +1,6 @@
+// ---- Coin ----
+const IMAGES_COIN_SPIN = ["img/8_coin/coin_1.png", "img/8_coin/coin_2.png"];
+
 // ---- Bottle ----
 const IMAGES_BOTTLE_ROTATION = [
   "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
@@ -83,16 +86,16 @@ const IMAGES_CHARACTER_HURT = [
 
 // ---- Chicken ----
 const IMAGES_CHICKEN_WALKING = [
-  'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-  'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-  'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
+  "img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
+  "img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
+  "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
 ];
 
 // ---- Small Chicken ----
 const IMAGES_SMALL_CHICKEN_WALKING = [
-  'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
-  'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
-  'img/3_enemies_chicken/chicken_small/1_walk/3_w.png',
+  "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
+  "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
+  "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
 ];
 
 // ---- Endboss ----

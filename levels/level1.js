@@ -21,8 +21,24 @@ function createBackgrounds() {
   return backgrounds;
 }
 
+function createCoins() {
+  const coins = [];
+  // 20 Münzen gleichmäßig über die Karte verteilt
+  for (let i = 0; i < 30; i++) {
+    const x = 400 + i * 320 + Math.random() * 150;
+    // Abwechselnd Boden- und Luftmünzen
+    const y =
+      i % 2 === 0
+        ? 340 + Math.random() * 20 // am Boden (340–360)
+        : 160 + Math.random() * 100; // in der Luft, per Sprung erreichbar (160–260)
+    coins.push(new Coin(x, y));
+  }
+  return coins;
+}
+
 const level1 = new Level(
   [...createObjects(20, () => new Chicken()), ...createObjects(25, () => new SmallChicken()), new Endboss()],
   createObjects(20, (_, i) => new Cloud(i * 350)),
   createBackgrounds(),
+  createCoins(),
 );
