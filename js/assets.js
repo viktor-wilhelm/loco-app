@@ -1,7 +1,16 @@
 // ---- Coin ----
 const IMAGES_COIN_SPIN = ["img/8_coin/coin_1.png", "img/8_coin/coin_2.png"];
 
+// ---- Chicken Dead ----
+const IMAGE_CHICKEN_DEAD = "img/3_enemies_chicken/chicken_normal/2_dead/dead.png";
+const IMAGE_SMALL_CHICKEN_DEAD = "img/3_enemies_chicken/chicken_small/2_dead/dead.png";
+
 // ---- Bottle ----
+const IMAGES_BOTTLE_GROUND = [
+  "img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
+  "img/6_salsa_bottle/2_salsa_bottle_on_ground.png",
+];
+
 const IMAGES_BOTTLE_ROTATION = [
   "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
   "img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",

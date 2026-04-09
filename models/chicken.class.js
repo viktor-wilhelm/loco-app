@@ -4,25 +4,35 @@ class Chicken extends MovableObject {
   y = 355;
   offset = { top: 5, bottom: 5, left: 5, right: 5 };
   IMAGES_WALKING = IMAGES_CHICKEN_WALKING;
+  isDead = false;
 
   currentImage = 0;
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
 
-    this.x = 200 + Math.random() * 10000; // Zahl zwischen 200 und 10200
+    this.x = 200 + Math.random() * 10000;
     this.speed = 0.15 + Math.random() * 0.5;
 
     this.animate();
   }
 
+  die() {
+    this.isDead = true;
+    this.loadImage(IMAGE_CHICKEN_DEAD);
+    this.speed = 0;
+    setTimeout(() => {
+      this.toBeRemoved = true;
+    }, 1000);
+  }
+
   animate() {
-    setInterval(() => {
-      this.moveLeft();
+    const walkInterval = setInterval(() => {
+      if (!this.isDead) this.moveLeft();
     }, 1000 / 60);
 
     setInterval(() => {
-      this.playAnimation(this.IMAGES_WALKING);
+      if (!this.isDead) this.playAnimation(this.IMAGES_WALKING);
     }, 150);
   }
 }
