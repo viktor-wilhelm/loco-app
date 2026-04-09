@@ -53,7 +53,7 @@ class World {
   checkCoinCollisions() {
     if (this.coinsCollected >= this.totalCoins) return;
     this.level.coins = this.level.coins.filter((coin) => {
-      const isAirCoin = coin.y < 350;
+      const isAirCoin = coin.y < 300;
       const canCollect = !isAirCoin || this.character.isAboveGround();
       if (canCollect && this.character.isColliding(coin)) {
         this.coinsCollected++;
