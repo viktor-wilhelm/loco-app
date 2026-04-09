@@ -28,6 +28,15 @@ const IMAGES_BOTTLE_SPLASH = [
 ];
 
 // ---- Status Bars ----
+const IMAGES_ENDBOSS_HEALTH = [
+  "img/7_statusbars/2_statusbar_endboss/blue/blue0.png",
+  "img/7_statusbars/2_statusbar_endboss/blue/blue20.png",
+  "img/7_statusbars/2_statusbar_endboss/blue/blue40.png",
+  "img/7_statusbars/2_statusbar_endboss/blue/blue60.png",
+  "img/7_statusbars/2_statusbar_endboss/blue/blue80.png",
+  "img/7_statusbars/2_statusbar_endboss/blue/blue100.png",
+];
+
 const IMAGES_HEALTH = [
   "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",
   "img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png",
@@ -117,4 +126,16 @@ const IMAGES_ENDBOSS_WALKING = [
   "img/4_enemie_boss_chicken/2_alert/G10.png",
   "img/4_enemie_boss_chicken/2_alert/G11.png",
   "img/4_enemie_boss_chicken/2_alert/G12.png",
+];
+
+const IMAGES_ENDBOSS_HURT = [
+  "img/4_enemie_boss_chicken/4_hurt/G21.png",
+  "img/4_enemie_boss_chicken/4_hurt/G22.png",
+  "img/4_enemie_boss_chicken/4_hurt/G23.png",
+];
+
+const IMAGES_ENDBOSS_DEAD = [
+  "img/4_enemie_boss_chicken/5_dead/G24.png",
+  "img/4_enemie_boss_chicken/5_dead/G25.png",
+  "img/4_enemie_boss_chicken/5_dead/G26.png",
 ];

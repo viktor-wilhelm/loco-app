@@ -6,8 +6,9 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar(-10, IMAGES_HEALTH);
-  coinBar = new StatusBar(35, IMAGES_COIN);
-  bottleBar = new StatusBar(80, IMAGES_BOTTLE);
+  coinBar = new StatusBar(35, IMAGES_COIN, 0);
+  bottleBar = new StatusBar(80, IMAGES_BOTTLE, 0);
+  endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
   coinsCollected = 0;
   totalCoins = 0;
@@ -65,11 +66,17 @@ class World {
   }
 
   checkBottleHitsEnemy() {
+    this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
     this.throwableObjects.forEach((bottle) => {
       if (bottle.isSplashing) return;
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead && bottle.isColliding(enemy)) {
-          enemy.die();
+          if (enemy instanceof Endboss) {
+            enemy.hit();
+            this.endbossBar.setPercentage(enemy.energy);
+          } else {
+            enemy.die();
+          }
           bottle.isSplashing = true;
           bottle.playSplash();
         }
@@ -117,6 +124,7 @@ class World {
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
+    this.addToMap(this.endbossBar);
     this.ctx.translate(this.camera_x, 0); // Forwards
 
     this.addToMap(this.character);
