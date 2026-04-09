@@ -23,10 +23,13 @@ function createBackgrounds() {
 
 function createCoins() {
   const coins = [];
-  // 20 Münzen gleichmäßig über die Karte verteilt
-  for (let i = 0; i < 30; i++) {
-    const x = 400 + i * 320 + Math.random() * 150;
-    // Abwechselnd Boden- und Luftmünzen
+  const startX = 400;
+  const endX = 6200;
+  const count = 30;
+  const step = (endX - startX) / (count - 1);
+
+  for (let i = 0; i < count; i++) {
+    const x = startX + i * step + (Math.random() - 0.5) * (step * 0.5);
     const y =
       i % 2 === 0
         ? 340 + Math.random() * 20 // am Boden (340–360)
