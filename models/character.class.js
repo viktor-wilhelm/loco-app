@@ -4,6 +4,7 @@ class Character extends MovableObject {
   y = 95;
   speed = 4;
   world;
+  offset = { top: 110, bottom: 10, left: 20, right: 20 };
 
   constructor() {
     super().loadImage(IMAGES_CHARACTER_WALKING[0]);
