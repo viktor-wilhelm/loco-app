@@ -44,7 +44,8 @@ class World {
 
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
-    if (this.keyboard.D && this.bottlesCollected > 0) {
+    if ((this.keyboard.D || this.keyboard.THROW_PENDING) && this.bottlesCollected > 0) {
+      this.keyboard.THROW_PENDING = false;
       let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;

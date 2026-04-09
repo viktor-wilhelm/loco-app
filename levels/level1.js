@@ -41,14 +41,9 @@ function createCoins() {
 
 function createBottles() {
   const bottles = [];
-  const startX = 600;
-  const endX = 6000;
-  const count = 20;
-  const step = (endX - startX) / (count - 1);
-
-  for (let i = 0; i < count; i++) {
-    const x = startX + i * step + (Math.random() - 0.5) * (step * 0.4);
-    const y = 350 + Math.random() * 20; // am Boden
+  for (let i = 0; i < 20; i++) {
+    const x = 600 + Math.random() * 5400;
+    const y = 350 + Math.random() * 20;
     bottles.push(new BottlePickup(x, y));
   }
   return bottles;
