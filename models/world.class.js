@@ -11,6 +11,9 @@ class World {
   endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
   throwOnCooldown = false;
+  gameOver = false;
+  gameOverStep = -1;
+  gameOverImages = [];
   coinsCollected = 0;
   totalCoins = 0;
   bottlesCollected = 0;
@@ -165,6 +168,18 @@ class World {
     requestAnimationFrame(function () {
       self.draw();
     });
+
+    if (this.gameOver && this.gameOverStep >= 0 && this.gameOverImages[this.gameOverStep]) {
+      this.ctx.fillStyle = "rgba(0,0,0,0.55)";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      const img = this.gameOverImages[this.gameOverStep];
+      const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
+      const dw = img.width * scale;
+      const dh = img.height * scale;
+      const dx = (this.canvas.width - dw) / 2;
+      const dy = (this.canvas.height - dh) / 2;
+      this.ctx.drawImage(img, dx, dy, dw, dh);
+    }
   }
 
   addBackgroundObjectsParallax(backgroundObjects) {
@@ -206,5 +221,33 @@ class World {
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
+  }
+
+  showGameOver() {
+    const paths = [
+      "img/You won, you lost/Game Over.png",
+      "img/You won, you lost/You lost b.png",
+      "img/You won, you lost/You lost.png",
+      "img/You won, you lost/Game over A.png",
+    ];
+    this.gameOverImages = paths.map((src) => {
+      const img = new Image();
+      img.src = src;
+      return img;
+    });
+    this.gameOver = true;
+    this.gameOverStep = 0;
+    const delays = [1500, 1500, 1500, 0];
+    let step = 0;
+    const next = () => {
+      if (delays[step] > 0) {
+        setTimeout(() => {
+          step++;
+          this.gameOverStep = step;
+          next();
+        }, delays[step]);
+      }
+    };
+    next();
   }
 }
