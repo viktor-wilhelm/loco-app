@@ -50,7 +50,7 @@ class World {
       let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
-      const percentage = Math.round((this.bottlesCollected / this.totalBottles) * 100);
+      const percentage = Math.max(0, this.bottlesCollected * 20);
       this.bottleBar.setPercentage(percentage);
     }
   }
@@ -104,7 +104,7 @@ class World {
     this.level.bottles = this.level.bottles.filter((bottle) => {
       if (this.character.isColliding(bottle)) {
         this.bottlesCollected++;
-        const percentage = Math.round((this.bottlesCollected / this.totalBottles) * 100);
+        const percentage = Math.min(100, this.bottlesCollected * 20);
         this.bottleBar.setPercentage(percentage);
         return false;
       }
