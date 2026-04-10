@@ -17,6 +17,7 @@ function handleKey(e, isPressed) {
     d: "D",
   };
   if (keyMap[e.key] !== undefined) keyboard[keyMap[e.key]] = isPressed;
+  if (e.key === "d" && isPressed) keyboard.THROW_PENDING = true;
 }
 
 window.addEventListener("keydown", (e) => handleKey(e, true));

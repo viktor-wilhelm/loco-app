@@ -39,9 +39,20 @@ function createCoins() {
   return coins;
 }
 
+function createBottles() {
+  const bottles = [];
+  for (let i = 0; i < 20; i++) {
+    const x = 600 + Math.random() * 5400;
+    const y = 350 + Math.random() * 20;
+    bottles.push(new BottlePickup(x, y));
+  }
+  return bottles;
+}
+
 const level1 = new Level(
   [...createObjects(20, () => new Chicken()), ...createObjects(25, () => new SmallChicken()), new Endboss()],
   createObjects(20, (_, i) => new Cloud(i * 350)),
   createBackgrounds(),
   createCoins(),
+  createBottles(),
 );
