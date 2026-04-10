@@ -16,6 +16,12 @@ class Character extends MovableObject {
     this.animate();
   }
 
+  isJumpingOn(enemy) {
+    const pepeCollisionTop = this.y + this.offset.top;
+    const enemyMidpoint = enemy.y + enemy.height / 2;
+    return this.speedY < 0 && pepeCollisionTop < enemyMidpoint;
+  }
+
   animate() {
     setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {

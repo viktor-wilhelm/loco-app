@@ -10,6 +10,7 @@ class World {
   bottleBar = new StatusBar(80, IMAGES_BOTTLE, 0);
   endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
+  throwOnCooldown = false;
   coinsCollected = 0;
   totalCoins = 0;
   bottlesCollected = 0;
@@ -24,6 +25,9 @@ class World {
     this.draw();
     this.setWorld();
     this.run();
+    setTimeout(() => {
+      this.level.enemies = createEnemies();
+    }, 3000);
   }
 
   setWorld() {
@@ -32,11 +36,14 @@ class World {
 
   run() {
     setInterval(() => {
-      this.checkCollisions();
       this.checkThrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
     }, 200);
+
+    setInterval(() => {
+      this.checkCollisions();
+    }, 50);
 
     setInterval(() => {
       this.checkBottleHitsEnemy();
@@ -45,8 +52,12 @@ class World {
 
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
-    if ((this.keyboard.D || this.keyboard.THROW_PENDING) && this.bottlesCollected > 0) {
+    if (!this.keyboard.D && !this.keyboard.THROW_PENDING) {
+      this.throwOnCooldown = false;
+    }
+    if ((this.keyboard.D || this.keyboard.THROW_PENDING) && !this.throwOnCooldown && this.bottlesCollected > 0) {
       this.keyboard.THROW_PENDING = false;
+      this.throwOnCooldown = true;
       let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 100);
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
@@ -59,10 +70,23 @@ class World {
     this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.energy);
+        if (this.character.isJumpingOn(enemy)) {
+          this.handleJumpOnEnemy(enemy);
+        } else if (!this.character.isHurt()) {
+          this.character.hit();
+          this.statusBar.setPercentage(this.character.energy);
+        }
       }
     });
+  }
+
+  handleJumpOnEnemy(enemy) {
+    if (enemy instanceof Endboss) {
+      enemy.hit();
+      this.endbossBar.setPercentage(enemy.energy);
+    } else {
+      enemy.die();
+    }
   }
 
   checkBottleHitsEnemy() {
