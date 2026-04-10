@@ -87,6 +87,7 @@ class World {
     } else {
       enemy.die();
     }
+    this.character.speedY = 15;
   }
 
   checkBottleHitsEnemy() {
