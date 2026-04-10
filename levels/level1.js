@@ -49,8 +49,12 @@ function createBottles() {
   return bottles;
 }
 
-function createEnemies() {
-  return [...createObjects(20, () => new Chicken()), ...createObjects(25, () => new SmallChicken()), new Endboss()];
+function createEnemies(minX = 1000) {
+  return [
+    ...createObjects(20, () => new Chicken(minX)),
+    ...createObjects(25, () => new SmallChicken(minX)),
+    new Endboss(),
+  ];
 }
 
 const level1 = new Level(

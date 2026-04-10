@@ -26,7 +26,7 @@ class World {
     this.setWorld();
     this.run();
     setTimeout(() => {
-      this.level.enemies = createEnemies();
+      this.level.enemies = createEnemies(this.character.x + 800);
     }, 3000);
   }
 
