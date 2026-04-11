@@ -104,6 +104,7 @@ class Endboss extends MovableObject {
     this.speed = 0;
     setTimeout(() => {
       this.toBeRemoved = true;
+      if (this.world) this.world.showGameWon();
     }, 1500);
   }
 
