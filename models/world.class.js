@@ -46,10 +46,8 @@ class World {
     }, 200);
 
     setInterval(() => {
+      this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
       this.checkCollisions();
-    }, 50);
-
-    setInterval(() => {
       this.checkBottleHitsEnemy();
     }, 50);
   }
@@ -73,7 +71,6 @@ class World {
   }
 
   checkCollisions() {
-    this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
         if (this.character.isJumpingOn(enemy)) {
@@ -101,7 +98,6 @@ class World {
   }
 
   checkBottleHitsEnemy() {
-    this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
     this.throwableObjects.forEach((bottle) => {
       if (bottle.isSplashing) return;
       this.level.enemies.forEach((enemy) => {

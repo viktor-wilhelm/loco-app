@@ -21,7 +21,7 @@ class Character extends MovableObject {
   }
 
   isJumpingOn(enemy) {
-    return this.y + this.height < enemy.y + enemy.height && this.speedY <= 0;
+    return (this.isAboveGround() || this.speedY < 0) && this.y + this.height < enemy.y + enemy.height;
   }
 
   animate() {
