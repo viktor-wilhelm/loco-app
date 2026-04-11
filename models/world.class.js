@@ -31,11 +31,17 @@ class World {
     this.run();
     setTimeout(() => {
       this.level.enemies = createEnemies(this.character.x + 800);
+      this.setEndbossWorld();
     }, 3000);
   }
 
   setWorld() {
     this.character.world = this;
+  }
+
+  setEndbossWorld() {
+    const boss = this.level.enemies.find((e) => e instanceof Endboss);
+    if (boss) boss.world = this;
   }
 
   run() {
@@ -86,6 +92,7 @@ class World {
   handleJumpOnEnemy(enemy) {
     this.activeEnemyInteraction = true;
     if (enemy instanceof Endboss) {
+      enemy.activate();
       enemy.hit();
       this.endbossBar.setPercentage(enemy.energy);
     } else {
@@ -103,6 +110,7 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead && bottle.isColliding(enemy)) {
           if (enemy instanceof Endboss) {
+            enemy.activate();
             enemy.hit();
             this.endbossBar.setPercentage(enemy.energy);
           } else {
