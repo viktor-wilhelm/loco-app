@@ -33,7 +33,7 @@ function createCoins() {
     const y =
       i % 2 === 0
         ? 340 + Math.random() * 20 // am Boden (340–360)
-        : 160 + Math.random() * 100; // in der Luft, per Sprung erreichbar (160–260)
+        : 80 + Math.random() * 60; // hoch oben, nur per Sprung erreichbar (80–140)
     coins.push(new Coin(x, y));
   }
   return coins;
@@ -41,10 +41,16 @@ function createCoins() {
 
 function createBottles() {
   const bottles = [];
-  for (let i = 0; i < 20; i++) {
+  const MIN_DISTANCE = 500;
+  let attempts = 0;
+  while (bottles.length < 20 && attempts < 2000) {
     const x = 600 + Math.random() * 5400;
-    const y = 350 + Math.random() * 20;
-    bottles.push(new BottlePickup(x, y));
+    const tooClose = bottles.some((b) => Math.abs(b.x - x) < MIN_DISTANCE);
+    if (!tooClose) {
+      const y = 350 + Math.random() * 20;
+      bottles.push(new BottlePickup(x, y));
+    }
+    attempts++;
   }
   return bottles;
 }
@@ -52,7 +58,7 @@ function createBottles() {
 function createEnemies(minX = 1000) {
   return [
     ...createObjects(20, () => new Chicken(minX)),
-    ...createObjects(25, () => new SmallChicken(minX)),
+    ...createObjects(20, () => new SmallChicken(minX)),
     new Endboss(),
   ];
 }

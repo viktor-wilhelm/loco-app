@@ -4,7 +4,7 @@ class Character extends MovableObject {
   y = 95;
   speed = 4;
   world;
-  offset = { top: 110, bottom: 10, left: 20, right: 20 };
+  offset = { top: 104, bottom: 10, left: 20, right: 20 };
   lastMoveTime = Date.now();
   deathAnimationDone = false;
 
@@ -21,9 +21,7 @@ class Character extends MovableObject {
   }
 
   isJumpingOn(enemy) {
-    const pepeCollisionTop = this.y + this.offset.top;
-    const enemyMidpoint = enemy.y + enemy.height / 2;
-    return this.speedY < 0 && pepeCollisionTop < enemyMidpoint;
+    return this.y + this.height < enemy.y + enemy.height && this.speedY <= 0;
   }
 
   animate() {

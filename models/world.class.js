@@ -11,6 +11,7 @@ class World {
   endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
   throwOnCooldown = false;
+  activeEnemyInteraction = false;
   gameOver = false;
   gameOverStep = -1;
   gameOverImages = [];
@@ -61,7 +62,9 @@ class World {
     if ((this.keyboard.D || this.keyboard.THROW_PENDING) && !this.throwOnCooldown && this.bottlesCollected > 0) {
       this.keyboard.THROW_PENDING = false;
       this.throwOnCooldown = true;
-      let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 100);
+      const facingLeft = this.character.otherDirection;
+      const offsetX = facingLeft ? -10 : 40;
+      let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
       const percentage = Math.max(0, this.bottlesCollected * 20);
@@ -75,7 +78,7 @@ class World {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
         if (this.character.isJumpingOn(enemy)) {
           this.handleJumpOnEnemy(enemy);
-        } else if (!this.character.isHurt()) {
+        } else if (!this.activeEnemyInteraction && !this.character.isHurt() && this.character.speedY <= 0) {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
         }
@@ -84,6 +87,7 @@ class World {
   }
 
   handleJumpOnEnemy(enemy) {
+    this.activeEnemyInteraction = true;
     if (enemy instanceof Endboss) {
       enemy.hit();
       this.endbossBar.setPercentage(enemy.energy);
@@ -91,6 +95,9 @@ class World {
       enemy.die();
     }
     this.character.speedY = 15;
+    setTimeout(() => {
+      this.activeEnemyInteraction = false;
+    }, 100);
   }
 
   checkBottleHitsEnemy() {
