@@ -3,8 +3,29 @@ let world;
 let keyboard = new Keyboard();
 
 function init() {
+  const slider = document.getElementById("volume-slider");
+  const savedVolume = localStorage.getItem("masterVolume");
+  if (savedVolume !== null) slider.value = savedVolume;
+  window.masterVolume = parseFloat(slider.value);
+  slider.addEventListener("input", () => {
+    window.masterVolume = parseFloat(slider.value);
+    localStorage.setItem("masterVolume", slider.value);
+  });
+}
+
+function startGame() {
+  document.getElementById("start-screen").style.display = "none";
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+}
+
+function toggleFullscreen() {
+  const container = document.getElementById("game-container");
+  if (!document.fullscreenElement) {
+    container.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
 }
 
 function handleKey(e, isPressed) {

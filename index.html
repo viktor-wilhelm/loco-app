@@ -29,8 +29,29 @@
   </head>
 
   <body onload="init()">
-    <h1>El Pollo Loco</h1>
+    <header>
+      <h1>EL POLLO LOCO</h1>
+    </header> 
 
-    <canvas id="canvas" width="720" height="480"> </canvas>
+    <main id="game-container">
+      <canvas id="canvas" width="720" height="480"></canvas>
+
+      <div id="start-screen">
+        <div id="start-ui">
+          <input class="volume-slider" type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" />
+          <div id="start-actions">
+            <button id="menu-btn" onclick="startGame()">MENU</button>
+            <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Vollbild">
+              <img src="img/fullscreen-icon.png" alt="Vollbild" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <p>&copy; 2026 EL POLLO LOCO. All rights reserved.</p>
+    </footer>
   </body>
 </html>
