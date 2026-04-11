@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
   width = 225;
   y = 110;
   speed = 0.8;
-  energy = 100;
+  energy = 200;
   isDead = false;
   isHurt = false;
   activated = false;
@@ -85,7 +85,7 @@ class Endboss extends MovableObject {
   spawnChickens() {
     const spawnX = this.x + this.width / 2 - 35;
     const spawnY = this.y + this.height * 0.55;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const offsetX = (i - 2) * 30;
       const chicken = new BossChicken(spawnX + offsetX, spawnY, this.world);
       this.world.level.enemies.push(chicken);
