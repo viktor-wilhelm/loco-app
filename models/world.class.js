@@ -17,6 +17,7 @@ class World {
   gameOverImages = [];
   coinsCollected = 0;
   totalCoins = 0;
+  coinHealCounter = 0;
   bottlesCollected = 0;
   totalBottles = 0;
 
@@ -132,6 +133,14 @@ class World {
         this.coinsCollected++;
         const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
         this.coinBar.setPercentage(percentage);
+        this.coinHealCounter++;
+        if (this.coinHealCounter >= 10) {
+          this.coinHealCounter = 0;
+          if (this.character.energy < 100) {
+            this.character.heal(100);
+            this.statusBar.setPercentage(this.character.energy);
+          }
+        }
         return false;
       }
       return true;
