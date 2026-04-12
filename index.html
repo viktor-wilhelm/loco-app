@@ -33,16 +33,16 @@
       <h1>EL POLLO LOCO</h1>
     </header> 
 
-    <main id="game-container">
+    <main id="game-container" class="game">
       <canvas id="canvas" width="720" height="480"></canvas>
 
-      <div id="start-screen">
-        <div id="start-ui">
-          <input class="volume-slider" type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" />
-          <div id="start-actions">
-            <button id="menu-btn" onclick="startGame()">MENU</button>
-            <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Vollbild">
-              <img src="img/10_menu/icon-vollbild-16.png" alt="Vollbild" />
+      <div id="start-screen" class="game__start-screen">
+        <div class="game__ui">
+          <input type="range" id="volume-slider" class="game__volume-slider" min="0" max="1" step="0.01" value="1" />
+          <div class="game__actions">
+            <button class="game__btn game__btn--menu" onclick="startGame()">MENU</button>
+            <button class="game__btn game__btn--fullscreen" onclick="toggleFullscreen()" title="Vollbild">
+              <img src="img/10_menu/icons-vollbild-20.png" alt="Vollbild" />
             </button>
           </div>
         </div>

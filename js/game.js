@@ -7,10 +7,17 @@ function init() {
   const savedVolume = localStorage.getItem("masterVolume");
   if (savedVolume !== null) slider.value = savedVolume;
   window.masterVolume = parseFloat(slider.value);
+  updateSliderFill(slider);
   slider.addEventListener("input", () => {
     window.masterVolume = parseFloat(slider.value);
     localStorage.setItem("masterVolume", slider.value);
+    updateSliderFill(slider);
   });
+}
+
+function updateSliderFill(slider) {
+  const pct = parseFloat(slider.value) * 100;
+  slider.style.setProperty("--fill", pct + "%");
 }
 
 function startGame() {
