@@ -21,11 +21,112 @@ h1 {
   text-shadow: 12px 24px 8px rgba(0, 0, 0, 0.5);
 }
 
-canvas {
-  background-color: black;
+.game {
+  position: relative;
   width: 100%;
   max-width: 820px;
+}
+
+canvas {
+  background-color: black;
+  display: block;
+  width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
 }
- 
+
+.game__start-screen {
+  position: absolute;
+  inset: 0;
+  background: url("img/9_intro_outro_screens/start/startscreen_1.png") no-repeat center / cover;
+  z-index: 10;
+}
+
+.game__ui {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.game__volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 4px;
+  background: linear-gradient(to right, #f5c518 var(--fill, 100%), rgba(255, 255, 255, 0.8) var(--fill, 100%));
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.game__volume-slider::-moz-range-track {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  height: 4px;
+}
+
+.game__volume-slider::-moz-range-progress {
+  background: #f5c518;
+  border-radius: 2px;
+  height: 4px;
+}
+
+.game__volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f5c518;
+  cursor: pointer;
+}
+
+.game__volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f5c518;
+  cursor: pointer;
+  border: none;
+}
+
+.game__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game__btn--menu {
+  font-family: "Zabars", Arial, sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  padding: 4px 8px 2px 14px;
+  background: #f5c518;
+  border: 2px solid #c8960c;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 2px 3px 0 #8b6000;
+}
+
+.game__btn--menu:hover {
+  background: #ffd740;
+}
+
+.game__btn--fullscreen {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.game__btn--fullscreen:hover {
+  color: #f5c518;
+}

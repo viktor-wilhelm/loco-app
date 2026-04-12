@@ -15,6 +15,9 @@ class World {
   gameOver = false;
   gameOverStep = -1;
   gameOverImages = [];
+  gameWon = false;
+  gameWonStep = -1;
+  gameWonImages = [];
   coinsCollected = 0;
   totalCoins = 0;
   coinHealCounter = 0;
@@ -47,12 +50,14 @@ class World {
 
   run() {
     setInterval(() => {
+      if (this.gameOver || this.gameWon) return;
       this.checkThrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
     }, 200);
 
     setInterval(() => {
+      if (this.gameOver || this.gameWon) return;
       this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
       this.checkCollisions();
       this.checkBottleHitsEnemy();
@@ -200,6 +205,18 @@ class World {
       const dy = (this.canvas.height - dh) / 2;
       this.ctx.drawImage(img, dx, dy, dw, dh);
     }
+
+    if (this.gameWon && this.gameWonStep >= 0 && this.gameWonImages[this.gameWonStep]) {
+      this.ctx.fillStyle = "rgba(0,0,0,0.55)";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      const img = this.gameWonImages[this.gameWonStep];
+      const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
+      const dw = img.width * scale;
+      const dh = img.height * scale;
+      const dx = (this.canvas.width - dw) / 2;
+      const dy = (this.canvas.height - dh) / 2;
+      this.ctx.drawImage(img, dx, dy, dw, dh);
+    }
   }
 
   addBackgroundObjectsParallax(backgroundObjects) {
@@ -241,6 +258,29 @@ class World {
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
+  }
+
+  showGameWon() {
+    const paths = ["img/You won, you lost/You Win A.png", "img/You won, you lost/You won A.png"];
+    this.gameWonImages = paths.map((src) => {
+      const img = new Image();
+      img.src = src;
+      return img;
+    });
+    this.gameWon = true;
+    this.gameWonStep = 0;
+    const delays = [1500, 0];
+    let step = 0;
+    const next = () => {
+      if (delays[step] > 0) {
+        setTimeout(() => {
+          step++;
+          this.gameWonStep = step;
+          next();
+        }, delays[step]);
+      }
+    };
+    next();
   }
 
   showGameOver() {
