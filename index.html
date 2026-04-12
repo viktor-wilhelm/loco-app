@@ -25,6 +25,7 @@
     <script src="models/world.class.js"></script>
 
     <script src="levels/level1.js"></script>
+    <script src="js/include-html.js"></script>
     <script src="js/game.js"></script>
   </head>
 
@@ -109,18 +110,40 @@
             rel="noopener noreferrer"
             title="Website"
           >
-            <img class="footer__social-icon" src="img/10_menu/pokemon.png" alt="Website" />
+            <img
+              class="footer__social-icon footer__social-icon--inverted"
+              src="img/10_menu/pokemon.svg"
+              alt="Website"
+            />
           </a>
         </nav>
 
         <nav class="footer__legal" aria-label="Legal Links">
-          <a class="footer__legal-link" href="#">Impressum</a>
+          <a
+            class="footer__legal-link"
+            href="#"
+            onclick="
+              loadOverlay('templates/legal-notice.html');
+              return false;
+            "
+            >Legal Notice</a
+          >
           <span class="footer__legal-divider" aria-hidden="true">·</span>
-          <a class="footer__legal-link" href="#">Datenschutz</a>
+          <a
+            class="footer__legal-link"
+            href="#"
+            onclick="
+              loadOverlay('templates/privacy-policy.html');
+              return false;
+            "
+            >Privacy Policy</a
+          >
         </nav>
 
         <p class="footer__copy">&copy; 2026 Viktor Wilhelm</p>
       </div>
     </footer>
+
+    <div id="overlay-container" hidden></div>
   </body>
 </html>
