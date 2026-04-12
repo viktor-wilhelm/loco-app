@@ -3,6 +3,7 @@ let world;
 let keyboard = new Keyboard();
 
 function init() {
+  document.querySelector(".preloader").classList.add("preloader--hidden");
   const slider = document.getElementById("volume-slider");
   const savedVolume = localStorage.getItem("masterVolume");
   if (savedVolume !== null) slider.value = savedVolume;
