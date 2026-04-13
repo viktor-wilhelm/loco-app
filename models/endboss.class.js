@@ -45,7 +45,7 @@ class Endboss extends MovableObject {
   }
 
   startJumpAttackLoop() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (!this.isDead && this.activated && !this.isJumping && !this.isNearPepe()) {
         this.jumpTowardsPepe();
       }
@@ -57,14 +57,14 @@ class Endboss extends MovableObject {
     this.isJumping = true;
     this.speedY = 20;
     const direction = this.world.character.x < this.x ? -1 : 1;
-    const jumpMove = setInterval(() => {
+    const jumpMove = setStoppableInterval(() => {
       if (this.isDead) {
         clearInterval(jumpMove);
         return;
       }
       this.x += direction * 4;
     }, 30);
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       clearInterval(jumpMove);
       this.isJumping = false;
     }, 800);
@@ -94,7 +94,7 @@ class Endboss extends MovableObject {
 
   showHurt() {
     this.isHurt = true;
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       this.isHurt = false;
     }, 500);
   }
@@ -102,14 +102,14 @@ class Endboss extends MovableObject {
   die() {
     this.isDead = true;
     this.speed = 0;
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       this.toBeRemoved = true;
       if (this.world) this.world.showGameWon();
     }, 1500);
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.isDead) return;
       if (this.activated) {
         if (!this.isNearPepe()) this.moveLeft();
@@ -118,7 +118,7 @@ class Endboss extends MovableObject {
       }
     }, 30);
 
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.isDead) {
         this.playAnimation(IMAGES_ENDBOSS_DEAD);
       } else if (this.isHurt) {

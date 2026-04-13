@@ -20,17 +20,17 @@ class SmallChicken extends MovableObject {
     this.isDead = true;
     this.loadImage(IMAGE_SMALL_CHICKEN_DEAD);
     this.speed = 0;
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       this.toBeRemoved = true;
     }, 1000);
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (!this.isDead) this.moveLeft();
     }, 1000 / 60);
 
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (!this.isDead) this.playAnimation(this.IMAGES_WALKING);
     }, 150);
   }

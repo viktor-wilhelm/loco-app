@@ -25,7 +25,7 @@ class Character extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.isDead()) return;
       if (this.world.gameWon) return;
 
@@ -49,14 +49,14 @@ class Character extends MovableObject {
       this.world.camera_x = -this.x + 120;
     }, 1000 / 60);
 
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.isDead()) {
         if (!this.deathAnimationDone) {
           this.playAnimation(IMAGES_CHARACTER_DEAD);
           if (this.currentImage >= IMAGES_CHARACTER_DEAD.length) {
             this.deathAnimationDone = true;
             this.img = this.imageCache[IMAGES_CHARACTER_DEAD[IMAGES_CHARACTER_DEAD.length - 1]];
-            setTimeout(() => this.world.showGameOver(), 800);
+            setStoppableTimeout(() => this.world.showGameOver(), 800);
           }
         }
         return;

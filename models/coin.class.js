@@ -17,7 +17,7 @@ class Coin extends DrawableObject {
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       this.currentImage = (this.currentImage + 1) % IMAGES_COIN_SPIN.length;
       this.img = this.imageCache[IMAGES_COIN_SPIN[this.currentImage]];
     }, 300);

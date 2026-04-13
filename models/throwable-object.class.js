@@ -19,14 +19,14 @@ class ThrowableObject extends MovableObject {
     this.applyGravity();
     const direction = this.facingLeft ? -10 : 10;
 
-    const moveInterval = setInterval(() => {
+    const moveInterval = setStoppableInterval(() => {
       if (!this.isSplashing) {
         this.x += direction;
         this.playAnimation(IMAGES_BOTTLE_ROTATION);
       }
     }, 25);
 
-    const groundInterval = setInterval(() => {
+    const groundInterval = setStoppableInterval(() => {
       if (!this.isSplashing && this.y >= 350) {
         this.isSplashing = true;
         clearInterval(moveInterval);
@@ -40,7 +40,7 @@ class ThrowableObject extends MovableObject {
     this.speedY = 0;
     const splashY = this.y;
     let frame = 0;
-    const splashInterval = setInterval(() => {
+    const splashInterval = setStoppableInterval(() => {
       this.y = splashY;
       this.img = this.imageCache[IMAGES_BOTTLE_SPLASH[frame]];
       frame++;
