@@ -3,6 +3,7 @@ class Character extends MovableObject {
   height = 220;
   y = 95;
   speed = 4;
+  energy = 50;
   world;
   offset = { top: 104, bottom: 10, left: 20, right: 20 };
   lastMoveTime = Date.now();
@@ -26,6 +27,7 @@ class Character extends MovableObject {
 
   animate() {
     setStoppableInterval(() => {
+      if (this.world.paused) return;
       if (this.isDead()) return;
       if (this.world.gameWon) return;
 

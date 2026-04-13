@@ -28,10 +28,12 @@ class Chicken extends MovableObject {
 
   animate() {
     const walkInterval = setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (!this.isDead) this.moveLeft();
     }, 1000 / 60);
 
     setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (!this.isDead) this.playAnimation(this.IMAGES_WALKING);
     }, 150);
   }

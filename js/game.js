@@ -29,8 +29,7 @@ function startGame() {
   world = new World(canvas, keyboard);
 }
 
-function openMenu() {
-  if (world) world.paused = true;
+function syncMenuSlider() {
   const menuSlider = document.getElementById("menu-volume-slider");
   menuSlider.value = document.getElementById("volume-slider").value;
   updateSliderFill(menuSlider);
@@ -41,12 +40,36 @@ function openMenu() {
     document.getElementById("volume-slider").value = menuSlider.value;
     updateSliderFill(document.getElementById("volume-slider"));
   });
+}
+
+function updatePrimaryMenuBtn() {
+  const primaryBtn = document.querySelector(".menu-btn--primary");
+  if (world) {
+    primaryBtn.textContent = "▶ Continue";
+    primaryBtn.onclick = () => closeMenu();
+  } else {
+    primaryBtn.textContent = "▶ Start Game";
+    primaryBtn.onclick = () => menuStartGame();
+  }
+}
+
+function openMenu() {
+  if (world) world.paused = true;
+  syncMenuSlider();
+  updatePrimaryMenuBtn();
   document.getElementById("menu-popup").removeAttribute("hidden");
 }
 
 function closeMenu() {
   document.getElementById("menu-popup").setAttribute("hidden", "");
-  if (world) world.paused = false;
+  if (world) {
+    world.character.resumeInvincible = true;
+    setStoppableTimeout(() => {
+      world.character.resumeInvincible = false;
+    }, 1000);
+    world.paused = false;
+    world.draw();
+  }
 }
 
 function menuStartGame() {
