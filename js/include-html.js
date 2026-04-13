@@ -1,9 +1,14 @@
+/** @type {string|null} */
+let overlayReturnTo = null;
+
 /**
  * Loads an HTML template into the overlay container and shows it.
  * @param {string} filePath - Path to the HTML template file.
+ * @param {string} [returnTo] - Where to return after closing ('menu' or nothing).
  * @returns {Promise<void>}
  */
-async function loadOverlay(filePath) {
+async function loadOverlay(filePath, returnTo) {
+  overlayReturnTo = returnTo || null;
   const container = document.getElementById("overlay-container");
 
   try {
@@ -40,6 +45,8 @@ function hideOverlay() {
   const container = document.getElementById("overlay-container");
   container.setAttribute("hidden", "");
   container.innerHTML = "";
+  if (overlayReturnTo === "menu") openMenu();
+  overlayReturnTo = null;
 }
 
 /**

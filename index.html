@@ -86,7 +86,7 @@
             <button
               class="menu-btn menu-btn--small"
               onclick="
-                loadOverlay('templates/legal-notice.html');
+                loadOverlay('templates/legal-notice.html', 'menu');
                 closeMenu();
               "
             >
@@ -95,7 +95,7 @@
             <button
               class="menu-btn menu-btn--small"
               onclick="
-                loadOverlay('templates/privacy-policy.html');
+                loadOverlay('templates/privacy-policy.html', 'menu');
                 closeMenu();
               "
             >
@@ -103,6 +103,8 @@
             </button>
           </div>
         </div>
+
+        <div id="overlay-container" hidden></div>
       </main>
 
       <footer class="footer">
@@ -199,7 +201,5 @@
         </div>
       </footer>
     </div>
-
-    <div id="overlay-container" hidden></div>
   </body>
 </html>
