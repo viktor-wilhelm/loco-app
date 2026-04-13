@@ -60,6 +60,48 @@
             </div>
           </div>
         </div>
+
+        <!-- Menu Popup -->
+        <div id="menu-popup" class="menu-popup" hidden>
+          <button class="menu-popup__close" onclick="closeMenu()" aria-label="Close">✕</button>
+          <div class="menu-popup__content">
+            <button class="menu-btn menu-btn--primary" onclick="menuStartGame()">▶ Start Game</button>
+            <button class="menu-btn" onclick="menuShowControls()">🎮 Controls</button>
+            <button class="menu-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            <div class="menu-sound">
+              <label class="menu-sound__label">🔊 Sound</label>
+              <input
+                type="range"
+                id="menu-volume-slider"
+                class="game__volume-slider"
+                min="0"
+                max="1"
+                step="0.01"
+                value="1"
+              />
+            </div>
+            <button class="menu-btn" onclick="menuGoHome()">🏠 Home</button>
+            <div class="menu-btn__divider"></div>
+            <button
+              class="menu-btn menu-btn--small"
+              onclick="
+                loadOverlay('templates/legal-notice.html');
+                closeMenu();
+              "
+            >
+              Legal Notice
+            </button>
+            <button
+              class="menu-btn menu-btn--small"
+              onclick="
+                loadOverlay('templates/privacy-policy.html');
+                closeMenu();
+              "
+            >
+              Privacy Policy
+            </button>
+          </div>
+        </div>
       </main>
 
       <footer class="footer">
@@ -155,47 +197,6 @@
           <p class="footer__copy">&copy; 2026 Viktor Wilhelm</p>
         </div>
       </footer>
-
-      <!-- Menu Popup -->
-      <div id="menu-popup" class="menu-popup" hidden>
-        <button class="menu-popup__close" onclick="closeMenu()" aria-label="Close">✕</button>
-        <div class="menu-popup__content">
-          <button class="menu-btn menu-btn--primary" onclick="menuStartGame()">▶ Start Game</button>
-          <button class="menu-btn" onclick="menuShowControls()">🎮 Controls</button>
-          <div class="menu-sound">
-            <label class="menu-sound__label">🔊 Sound</label>
-            <input
-              type="range"
-              id="menu-volume-slider"
-              class="game__volume-slider"
-              min="0"
-              max="1"
-              step="0.01"
-              value="1"
-            />
-          </div>
-          <button class="menu-btn" onclick="menuGoHome()">🏠 Home</button>
-          <div class="menu-btn__divider"></div>
-          <button
-            class="menu-btn menu-btn--small"
-            onclick="
-              loadOverlay('templates/legal-notice.html');
-              closeMenu();
-            "
-          >
-            Legal Notice
-          </button>
-          <button
-            class="menu-btn menu-btn--small"
-            onclick="
-              loadOverlay('templates/privacy-policy.html');
-              closeMenu();
-            "
-          >
-            Privacy Policy
-          </button>
-        </div>
-      </div>
     </div>
 
     <div id="overlay-container" hidden></div>

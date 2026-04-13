@@ -96,3 +96,40 @@
   width: 100%;
   max-width: 820px;
 }
+
+/* =====================
+   Fullscreen Mode
+   ===================== */
+
+#game-container:fullscreen,
+#game-container:-webkit-full-screen,
+#game-container:-moz-full-screen,
+#game-container:-ms-fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: none;
+  background: #000;
+  border-radius: 0;
+  overflow: visible;
+}
+
+#game-container:fullscreen canvas,
+#game-container:-webkit-full-screen canvas,
+#game-container:-moz-full-screen canvas,
+#game-container:-ms-fullscreen canvas {
+  width: 100vw;
+  height: 100vh;
+  max-width: calc(100vh * 720 / 480);
+  max-height: calc(100vw * 480 / 720);
+  aspect-ratio: 720 / 480;
+  border: none;
+  border-radius: 0;
+}
+
+#game-container:fullscreen .menu-popup,
+#game-container:-webkit-full-screen .menu-popup,
+#game-container:-moz-full-screen .menu-popup,
+#game-container:-ms-fullscreen .menu-popup {
+  border-radius: 0;
+}
