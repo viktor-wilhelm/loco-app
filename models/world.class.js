@@ -154,8 +154,17 @@ class World {
 
   checkBottleCollisions() {
     if (this.bottlesCollected >= this.totalBottles) return;
+    const c = this.character;
+    const pepeCenterX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
+    const pepeBottom = c.y + c.height - c.offset.bottom;
+    const pepeMidY = c.y + c.height / 2;
     this.level.bottles = this.level.bottles.filter((bottle) => {
-      if (this.character.isColliding(bottle)) {
+      const bLeft = bottle.x + bottle.offset.left;
+      const bRight = bottle.x + bottle.width - bottle.offset.right;
+      const bTop = bottle.y + bottle.offset.top;
+      const bBottom = bottle.y + bottle.height - bottle.offset.bottom;
+      const hits = pepeCenterX > bLeft && pepeCenterX < bRight && pepeBottom > bTop && pepeMidY < bBottom;
+      if (hits) {
         this.bottlesCollected++;
         const percentage = Math.min(100, this.bottlesCollected * 20);
         this.bottleBar.setPercentage(percentage);

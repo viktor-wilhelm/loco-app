@@ -47,7 +47,7 @@ function createBottles() {
     const x = 600 + Math.random() * 5400;
     const tooClose = bottles.some((b) => Math.abs(b.x - x) < MIN_DISTANCE);
     if (!tooClose) {
-      const y = 350 + Math.random() * 20;
+      const y = 340 + Math.random() * 10;
       bottles.push(new BottlePickup(x, y));
     }
     attempts++;

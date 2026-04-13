@@ -2,6 +2,7 @@ class BottlePickup extends DrawableObject {
   width = 60;
   height = 80;
   currentImage = 0;
+  offset = { top: 0, bottom: 0, left: 0, right: 0 };
 
   /**
    * @param {number} x - X-Position der Flasche
