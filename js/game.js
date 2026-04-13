@@ -27,6 +27,45 @@ function startGame() {
   world = new World(canvas, keyboard);
 }
 
+function openMenu() {
+  if (world) world.paused = true;
+  const menuSlider = document.getElementById("menu-volume-slider");
+  menuSlider.value = document.getElementById("volume-slider").value;
+  updateSliderFill(menuSlider);
+  menuSlider.addEventListener("input", () => {
+    window.masterVolume = parseFloat(menuSlider.value);
+    localStorage.setItem("masterVolume", menuSlider.value);
+    updateSliderFill(menuSlider);
+    document.getElementById("volume-slider").value = menuSlider.value;
+    updateSliderFill(document.getElementById("volume-slider"));
+  });
+  document.getElementById("menu-popup").removeAttribute("hidden");
+}
+
+function closeMenu() {
+  document.getElementById("menu-popup").setAttribute("hidden", "");
+  if (world) world.paused = false;
+}
+
+function menuStartGame() {
+  closeMenu();
+  startGame();
+}
+
+function menuGoHome() {
+  closeMenu();
+  if (world) {
+    world.gameOver = true;
+    world.gameWon = true;
+  }
+  world = null;
+  document.getElementById("start-screen").style.display = "";
+}
+
+function menuShowControls() {
+  loadOverlay("templates/controls.html");
+  closeMenu();
+}
 function toggleFullscreen() {
   const container = document.getElementById("game-container");
   if (!document.fullscreenElement) {
@@ -47,6 +86,9 @@ function handleKey(e, isPressed) {
   };
   if (keyMap[e.key] !== undefined) keyboard[keyMap[e.key]] = isPressed;
   if (e.key === "d" && isPressed) keyboard.THROW_PENDING = true;
+  if (e.key === "Escape" && isPressed && world) {
+    document.getElementById("menu-popup").hasAttribute("hidden") ? openMenu() : closeMenu();
+  }
 }
 
 window.addEventListener("keydown", (e) => handleKey(e, true));
