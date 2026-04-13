@@ -41,7 +41,7 @@ function createCoins() {
 
 function createBottles() {
   const bottles = [];
-  const MIN_DISTANCE = 500;
+  const MIN_DISTANCE = 200;
   let attempts = 0;
   while (bottles.length < 20 && attempts < 2000) {
     const x = 600 + Math.random() * 5400;
@@ -57,8 +57,8 @@ function createBottles() {
 
 function createEnemies(minX = 1000) {
   return [
-    ...createObjects(20, () => new Chicken(minX)),
-    ...createObjects(20, () => new SmallChicken(minX)),
+    ...createObjects(8, () => new Chicken(minX)),
+    ...createObjects(8, () => new SmallChicken(minX)),
     new Endboss(),
   ];
 }

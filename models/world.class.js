@@ -35,12 +35,13 @@ class World {
     this.run();
     setStoppableTimeout(() => {
       this.level.enemies = createEnemies(this.character.x + 800);
-      this.setEndbossWorld();
+      this.setWorld();
     }, 3000);
   }
 
   setWorld() {
     this.character.world = this;
+    this.level.enemies.forEach((e) => (e.world = this));
   }
 
   setEndbossWorld() {
@@ -77,22 +78,28 @@ class World {
       let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
       this.throwableObjects.push(bottle);
       this.bottlesCollected--;
-      const percentage = Math.max(0, this.bottlesCollected * 20);
+      const percentage = Math.max(0, this.bottlesCollected * 10);
       this.bottleBar.setPercentage(percentage);
     }
   }
 
   checkCollisions() {
-    this.level.enemies.forEach((enemy) => {
+    for (const enemy of this.level.enemies) {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
-        if (this.character.isJumpingOn(enemy)) {
+        if (!this.activeEnemyInteraction && this.character.isJumpingOn(enemy)) {
           this.handleJumpOnEnemy(enemy);
-        } else if (!this.activeEnemyInteraction && !this.character.isHurt() && this.character.speedY <= 0) {
+          break;
+        } else if (
+          !this.activeEnemyInteraction &&
+          !this.character.isHurt() &&
+          !this.character.resumeInvincible &&
+          this.character.speedY <= 0
+        ) {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
         }
       }
-    });
+    }
   }
 
   handleJumpOnEnemy(enemy) {
@@ -100,14 +107,23 @@ class World {
     if (enemy instanceof Endboss) {
       enemy.activate();
       enemy.hit();
+      enemy.hit();
       this.endbossBar.setPercentage(enemy.energy);
+      const bounceDirection = this.character.x < enemy.x ? -1 : 1;
+      this.character.x -= bounceDirection * 60;
+      this.character.speedY = 20;
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
+      setStoppableTimeout(() => {
+        this.activeEnemyInteraction = false;
+      }, 800);
     } else {
       enemy.die();
+      this.character.speedY = 15;
+      setStoppableTimeout(() => {
+        this.activeEnemyInteraction = false;
+      }, 100);
     }
-    this.character.speedY = 15;
-    setStoppableTimeout(() => {
-      this.activeEnemyInteraction = false;
-    }, 100);
   }
 
   checkBottleHitsEnemy() {
@@ -153,7 +169,7 @@ class World {
   }
 
   checkBottleCollisions() {
-    if (this.bottlesCollected >= this.totalBottles) return;
+    if (this.bottlesCollected >= 10) return;
     const c = this.character;
     const pepeCenterX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
     const pepeBottom = c.y + c.height - c.offset.bottom;
@@ -166,7 +182,7 @@ class World {
       const hits = pepeCenterX > bLeft && pepeCenterX < bRight && pepeBottom > bTop && pepeMidY < bBottom;
       if (hits) {
         this.bottlesCollected++;
-        const percentage = Math.min(100, this.bottlesCollected * 20);
+        const percentage = Math.min(100, this.bottlesCollected * 10);
         this.bottleBar.setPercentage(percentage);
         return false;
       }
@@ -200,7 +216,7 @@ class World {
     // draw() wird immer wieder aufgerufen
     let self = this;
     requestAnimationFrame(function () {
-      self.draw();
+      if (!self.paused) self.draw();
     });
 
     if (this.gameOver && this.gameOverStep >= 0 && this.gameOverImages[this.gameOverStep]) {

@@ -27,6 +27,7 @@ class Character extends MovableObject {
 
   animate() {
     setStoppableInterval(() => {
+      if (this.world.paused) return;
       if (this.isDead()) return;
       if (this.world.gameWon) return;
 

@@ -11,7 +11,7 @@ class Endboss extends MovableObject {
   isJumping = false;
   world;
 
-  static GROUND_Y = 0;
+  static GROUND_Y = -110;
   offset = { top: 60, bottom: 20, left: 30, right: 30 };
 
   constructor() {
@@ -33,9 +33,9 @@ class Endboss extends MovableObject {
   activate() {
     if (this.activated) return;
     this.activated = true;
-    this.height = 450;
-    this.width = 300;
-    this.y = 0;
+    this.height = 560;
+    this.width = 370;
+    this.y = -110;
     this.applyGravity();
     this.startJumpAttackLoop();
   }
@@ -46,6 +46,7 @@ class Endboss extends MovableObject {
 
   startJumpAttackLoop() {
     setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (!this.isDead && this.activated && !this.isJumping && !this.isNearPepe()) {
         this.jumpTowardsPepe();
       }
@@ -58,6 +59,7 @@ class Endboss extends MovableObject {
     this.speedY = 20;
     const direction = this.world.character.x < this.x ? -1 : 1;
     const jumpMove = setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (this.isDead) {
         clearInterval(jumpMove);
         return;
@@ -85,7 +87,7 @@ class Endboss extends MovableObject {
   spawnChickens() {
     const spawnX = this.x + this.width / 2 - 35;
     const spawnY = this.y + this.height * 0.55;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
       const offsetX = (i - 2) * 30;
       const chicken = new BossChicken(spawnX + offsetX, spawnY, this.world);
       this.world.level.enemies.push(chicken);
@@ -110,15 +112,13 @@ class Endboss extends MovableObject {
 
   animate() {
     setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (this.isDead) return;
-      if (this.activated) {
-        if (!this.isNearPepe()) this.moveLeft();
-      } else {
-        if (!this.isNearPepe()) this.moveLeft();
-      }
+      this.moveLeft();
     }, 30);
 
     setStoppableInterval(() => {
+      if (this.world && this.world.paused) return;
       if (this.isDead) {
         this.playAnimation(IMAGES_ENDBOSS_DEAD);
       } else if (this.isHurt) {
