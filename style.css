@@ -5,7 +5,9 @@ body {
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
-  background-image: url("img/5_background/my-desert.png");
+  background-image: url("img/5_background/my-desert-landscape-with-windmil-and-barn.png");
+  background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
   font-family: "Zabars", Arial, Helvetica, sans-serif;
 }
@@ -14,6 +16,11 @@ h1 {
   font-size: 4rem;
   letter-spacing: 3px;
   text-shadow: 12px 24px 8px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(160deg, #ffe066 10%, #ff6701 45%, #ff3300 70%, #ffb347 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #ff6701;
 }
 
 .game {
