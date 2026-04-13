@@ -17,7 +17,7 @@ class BottlePickup extends DrawableObject {
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       this.currentImage = (this.currentImage + 1) % IMAGES_BOTTLE_GROUND.length;
       this.img = this.imageCache[IMAGES_BOTTLE_GROUND[this.currentImage]];
     }, 400);

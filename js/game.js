@@ -22,6 +22,8 @@ function updateSliderFill(slider) {
 }
 
 function startGame() {
+  clearAllIntervals();
+  level1 = createLevel1();
   document.getElementById("start-screen").style.display = "none";
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
@@ -54,6 +56,7 @@ function menuStartGame() {
 
 function menuGoHome() {
   closeMenu();
+  clearAllIntervals();
   if (world) {
     world.gameOver = true;
     world.gameWon = true;

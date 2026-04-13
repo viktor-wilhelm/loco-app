@@ -33,7 +33,7 @@ class World {
     this.draw();
     this.setWorld();
     this.run();
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       this.level.enemies = createEnemies(this.character.x + 800);
       this.setEndbossWorld();
     }, 3000);
@@ -49,14 +49,14 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.gameOver || this.gameWon || this.paused) return;
       this.checkThrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
     }, 200);
 
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.gameOver || this.gameWon || this.paused) return;
       this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
       this.checkCollisions();
@@ -105,7 +105,7 @@ class World {
       enemy.die();
     }
     this.character.speedY = 15;
-    setTimeout(() => {
+    setStoppableTimeout(() => {
       this.activeEnemyInteraction = false;
     }, 100);
   }
@@ -273,13 +273,13 @@ class World {
     let step = 0;
     const next = () => {
       if (delays[step] > 0) {
-        setTimeout(() => {
+        setStoppableTimeout(() => {
           step++;
           this.gameWonStep = step;
           next();
         }, delays[step]);
       } else {
-        setTimeout(() => menuGoHome(), 2500);
+        setStoppableTimeout(() => menuGoHome(), 2500);
       }
     };
     next();
@@ -303,13 +303,13 @@ class World {
     let step = 0;
     const next = () => {
       if (delays[step] > 0) {
-        setTimeout(() => {
+        setStoppableTimeout(() => {
           step++;
           this.gameOverStep = step;
           next();
         }, delays[step]);
       } else {
-        setTimeout(() => menuGoHome(), 2500);
+        setStoppableTimeout(() => menuGoHome(), 2500);
       }
     };
     next();

@@ -63,10 +63,14 @@ function createEnemies(minX = 1000) {
   ];
 }
 
-const level1 = new Level(
-  [],
-  createObjects(20, (_, i) => new Cloud(i * 350)),
-  createBackgrounds(),
-  createCoins(),
-  createBottles(),
-);
+function createLevel1() {
+  return new Level(
+    [],
+    createObjects(20, (_, i) => new Cloud(i * 350)),
+    createBackgrounds(),
+    createCoins(),
+    createBottles(),
+  );
+}
+
+let level1 = createLevel1();
