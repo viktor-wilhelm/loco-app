@@ -50,14 +50,14 @@ class World {
 
   run() {
     setInterval(() => {
-      if (this.gameOver || this.gameWon) return;
+      if (this.gameOver || this.gameWon || this.paused) return;
       this.checkThrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
     }, 200);
 
     setInterval(() => {
-      if (this.gameOver || this.gameWon) return;
+      if (this.gameOver || this.gameWon || this.paused) return;
       this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
       this.checkCollisions();
       this.checkBottleHitsEnemy();
@@ -278,6 +278,8 @@ class World {
           this.gameWonStep = step;
           next();
         }, delays[step]);
+      } else {
+        setTimeout(() => menuGoHome(), 2500);
       }
     };
     next();
@@ -306,6 +308,8 @@ class World {
           this.gameOverStep = step;
           next();
         }, delays[step]);
+      } else {
+        setTimeout(() => menuGoHome(), 2500);
       }
     };
     next();

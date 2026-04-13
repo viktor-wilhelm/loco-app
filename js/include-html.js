@@ -41,3 +41,19 @@ function hideOverlay() {
   container.setAttribute("hidden", "");
   container.innerHTML = "";
 }
+
+/**
+ * Opens the in-game menu popup.
+ * @returns {void}
+ */
+function openMenu() {
+  document.getElementById("menu-popup").removeAttribute("hidden");
+}
+
+/**
+ * Closes the in-game menu popup.
+ * @returns {void}
+ */
+function closeMenu() {
+  document.getElementById("menu-popup").setAttribute("hidden", "");
+}
