@@ -32,8 +32,8 @@ function createCoins() {
     const x = startX + i * step + (Math.random() - 0.5) * (step * 0.5);
     const y =
       i % 2 === 0
-        ? 340 + Math.random() * 20 // am Boden (340–360)
-        : 80 + Math.random() * 60; // hoch oben, nur per Sprung erreichbar (80–140)
+        ? 340 + Math.random() * 20 
+        : 80 + Math.random() * 60; 
     coins.push(new Coin(x, y));
   }
   return coins;
