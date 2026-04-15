@@ -58,6 +58,10 @@ class Endboss extends MovableObject {
     this.isJumping = true;
     this.speedY = 20;
     const direction = this.world.character.x < this.x ? -1 : 1;
+    this.startJumpMoveInterval(direction);
+  }
+
+  startJumpMoveInterval(direction) {
     const jumpMove = setStoppableInterval(() => {
       if (this.world && this.world.paused) return;
       if (this.isDead) {
@@ -79,9 +83,13 @@ class Endboss extends MovableObject {
       this.energy = 0;
       this.die();
     } else {
-      this.showHurt();
-      if (this.world && this.hitCount % 1 === 0) this.spawnChickens();
+      this.handleHurt();
     }
+  }
+
+  handleHurt() {
+    this.showHurt();
+    if (this.world) this.spawnChickens();
   }
 
   spawnChickens() {

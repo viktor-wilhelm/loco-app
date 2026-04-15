@@ -67,7 +67,7 @@ class World {
 
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
-    if (!this.keyboard.D && !this.keyboard.THROW_PENDING) {
+    if (!this.keyboard.D) {
       this.throwOnCooldown = false;
     }
     if ((this.keyboard.D || this.keyboard.THROW_PENDING) && !this.throwOnCooldown && this.bottlesCollected > 0) {
