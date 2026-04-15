@@ -109,7 +109,7 @@
 
 .game-wrap {
   position: relative;
-  width: 100%;
+  width: calc(100% - 4rem);
   max-width: 820px;
 }
 
