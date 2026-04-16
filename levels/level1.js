@@ -30,20 +30,17 @@ function createCoins() {
 
   for (let i = 0; i < count; i++) {
     const x = startX + i * step + (Math.random() - 0.5) * (step * 0.5);
-    const y =
-      i % 2 === 0
-        ? 340 + Math.random() * 20 
-        : 80 + Math.random() * 60; 
+    const y = i % 2 === 0 ? 340 + Math.random() * 20 : 80 + Math.random() * 60;
     coins.push(new Coin(x, y));
   }
   return coins;
 }
 
-function createBottles() {
+function createBottles(count = 20) {
   const bottles = [];
   const MIN_DISTANCE = 200;
   let attempts = 0;
-  while (bottles.length < 20 && attempts < 2000) {
+  while (bottles.length < count && attempts < 2000) {
     const x = 600 + Math.random() * 5400;
     const tooClose = bottles.some((b) => Math.abs(b.x - x) < MIN_DISTANCE);
     if (!tooClose) {

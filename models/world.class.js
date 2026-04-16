@@ -22,6 +22,7 @@ class World {
   coinHealCounter = 0;
   bottlesCollected = 0;
   totalBottles = 0;
+  bottleRefillCount = 0;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -78,6 +79,15 @@ class World {
     this.throwableObjects.push(bottle);
     this.bottlesCollected--;
     this.bottleBar.setPercentage(Math.max(0, this.bottlesCollected * 10));
+    if (this.bottlesCollected === 0 && this.level.bottles.length === 0) {
+      this.spawnBottleRefill();
+    }
+  }
+
+  spawnBottleRefill() {
+    if (this.bottleRefillCount >= 1) return;
+    this.bottleRefillCount++;
+    this.level.bottles = createBottles(10);
   }
 
   checkCollisions() {
