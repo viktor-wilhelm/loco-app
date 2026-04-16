@@ -111,7 +111,7 @@ function handleKey(e, isPressed) {
     d: "D",
   };
   if (keyMap[e.key] !== undefined) keyboard[keyMap[e.key]] = isPressed;
-  if (e.key === "d" && isPressed) keyboard.THROW_PENDING = true;
+  if (e.key === "d" && isPressed && !e.repeat) keyboard.THROW_PENDING = true;
   if (e.key === "Escape" && isPressed && world) {
     document.getElementById("menu-popup").hasAttribute("hidden") ? openMenu() : closeMenu();
   }

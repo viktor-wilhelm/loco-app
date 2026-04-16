@@ -10,7 +10,6 @@ class World {
   bottleBar = new StatusBar(80, IMAGES_BOTTLE, 0);
   endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
-  throwOnCooldown = false;
   activeEnemyInteraction = false;
   gameOver = false;
   gameOverStep = -1;
@@ -67,14 +66,12 @@ class World {
 
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
-    if (!this.keyboard.D) this.throwOnCooldown = false;
-    const wantsThrow = this.keyboard.D || this.keyboard.THROW_PENDING;
-    if (wantsThrow && !this.throwOnCooldown && this.bottlesCollected > 0) this.throwBottle();
+    if (!this.keyboard.THROW_PENDING) return;
+    this.keyboard.THROW_PENDING = false;
+    if (this.bottlesCollected > 0) this.throwBottle();
   }
 
   throwBottle() {
-    this.keyboard.THROW_PENDING = false;
-    this.throwOnCooldown = true;
     const facingLeft = this.character.otherDirection;
     const offsetX = facingLeft ? -10 : 40;
     const bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
@@ -242,11 +239,11 @@ class World {
 
   drawWorld() {
     this.ctx.translate(this.camera_x, 0);
-    this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.throwableObjects);
+    this.addToMap(this.character);
     this.ctx.translate(-this.camera_x, 0);
   }
 
