@@ -1,3 +1,13 @@
+// ---- Game Over / Win Screens ----
+const IMAGES_GAME_OVER = [
+  "img/You won, you lost/Game Over.png",
+  "img/You won, you lost/You lost b.png",
+  "img/You won, you lost/You lost.png",
+  "img/You won, you lost/Game over A.png",
+];
+
+const IMAGES_GAME_WON = ["img/You won, you lost/You Win A.png", "img/You won, you lost/You won A.png"];
+
 // ---- Coin ----
 const IMAGES_COIN_SPIN = ["img/8_coin/coin_1.png", "img/8_coin/coin_2.png"];
 

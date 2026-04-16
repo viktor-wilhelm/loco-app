@@ -14,10 +14,10 @@ class World {
   activeEnemyInteraction = false;
   gameOver = false;
   gameOverStep = -1;
-  gameOverImages = [];
+  gameOverImages = IMAGES_GAME_OVER.map((src) => Object.assign(new Image(), { src }));
   gameWon = false;
   gameWonStep = -1;
-  gameWonImages = [];
+  gameWonImages = IMAGES_GAME_WON.map((src) => Object.assign(new Image(), { src }));
   coinsCollected = 0;
   totalCoins = 0;
   coinHealCounter = 0;
@@ -67,20 +67,20 @@ class World {
 
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
-    if (!this.keyboard.D) {
-      this.throwOnCooldown = false;
-    }
-    if ((this.keyboard.D || this.keyboard.THROW_PENDING) && !this.throwOnCooldown && this.bottlesCollected > 0) {
-      this.keyboard.THROW_PENDING = false;
-      this.throwOnCooldown = true;
-      const facingLeft = this.character.otherDirection;
-      const offsetX = facingLeft ? -10 : 40;
-      let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
-      this.throwableObjects.push(bottle);
-      this.bottlesCollected--;
-      const percentage = Math.max(0, this.bottlesCollected * 10);
-      this.bottleBar.setPercentage(percentage);
-    }
+    if (!this.keyboard.D) this.throwOnCooldown = false;
+    const wantsThrow = this.keyboard.D || this.keyboard.THROW_PENDING;
+    if (wantsThrow && !this.throwOnCooldown && this.bottlesCollected > 0) this.throwBottle();
+  }
+
+  throwBottle() {
+    this.keyboard.THROW_PENDING = false;
+    this.throwOnCooldown = true;
+    const facingLeft = this.character.otherDirection;
+    const offsetX = facingLeft ? -10 : 40;
+    const bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
+    this.throwableObjects.push(bottle);
+    this.bottlesCollected--;
+    this.bottleBar.setPercentage(Math.max(0, this.bottlesCollected * 10));
   }
 
   checkCollisions() {
@@ -89,12 +89,7 @@ class World {
         if (!this.activeEnemyInteraction && this.character.isJumpingOn(enemy)) {
           this.handleJumpOnEnemy(enemy);
           break;
-        } else if (
-          !this.activeEnemyInteraction &&
-          !this.character.isHurt() &&
-          !this.character.resumeInvincible &&
-          this.character.speedY <= 0
-        ) {
+        } else if (this.canTakeDamage()) {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
         }
@@ -102,28 +97,45 @@ class World {
     }
   }
 
+  canTakeDamage() {
+    return (
+      !this.activeEnemyInteraction &&
+      !this.character.isHurt() &&
+      !this.character.resumeInvincible &&
+      this.character.speedY <= 0
+    );
+  }
+
   handleJumpOnEnemy(enemy) {
     this.activeEnemyInteraction = true;
     if (enemy instanceof Endboss) {
-      enemy.activate();
-      enemy.hit();
-      enemy.hit();
-      this.endbossBar.setPercentage(enemy.energy);
-      const bounceDirection = this.character.x < enemy.x ? -1 : 1;
-      this.character.x -= bounceDirection * 60;
-      this.character.speedY = 20;
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
-      setStoppableTimeout(() => {
-        this.activeEnemyInteraction = false;
-      }, 800);
+      this.handleJumpOnEndboss(enemy);
     } else {
-      enemy.die();
-      this.character.speedY = 15;
-      setStoppableTimeout(() => {
-        this.activeEnemyInteraction = false;
-      }, 100);
+      this.handleJumpOnChicken(enemy);
     }
+  }
+
+  handleJumpOnEndboss(enemy) {
+    enemy.activate();
+    enemy.hit();
+    enemy.hit();
+    this.endbossBar.setPercentage(enemy.energy);
+    const bounceDirection = this.character.x < enemy.x ? -1 : 1;
+    this.character.x -= bounceDirection * 60;
+    this.character.speedY = 20;
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+    setStoppableTimeout(() => {
+      this.activeEnemyInteraction = false;
+    }, 800);
+  }
+
+  handleJumpOnChicken(enemy) {
+    enemy.die();
+    this.character.speedY = 15;
+    setStoppableTimeout(() => {
+      this.activeEnemyInteraction = false;
+    }, 100);
   }
 
   checkBottleHitsEnemy() {
@@ -131,18 +143,22 @@ class World {
       if (bottle.isSplashing) return;
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead && bottle.isColliding(enemy)) {
-          if (enemy instanceof Endboss) {
-            enemy.activate();
-            enemy.hit();
-            this.endbossBar.setPercentage(enemy.energy);
-          } else {
-            enemy.die();
-          }
-          bottle.isSplashing = true;
-          bottle.playSplash();
+          this.applyBottleHit(bottle, enemy);
         }
       });
     });
+  }
+
+  applyBottleHit(bottle, enemy) {
+    if (enemy instanceof Endboss) {
+      enemy.activate();
+      enemy.hit();
+      this.endbossBar.setPercentage(enemy.energy);
+    } else {
+      enemy.die();
+    }
+    bottle.isSplashing = true;
+    bottle.playSplash();
   }
 
   checkCoinCollisions() {
@@ -151,97 +167,98 @@ class World {
       const isAirCoin = coin.y < 300;
       const canCollect = !isAirCoin || this.character.isAboveGround();
       if (canCollect && this.character.isColliding(coin)) {
-        this.coinsCollected++;
-        const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
-        this.coinBar.setPercentage(percentage);
-        this.coinHealCounter++;
-        if (this.coinHealCounter >= 10) {
-          this.coinHealCounter = 0;
-          if (this.character.energy < 100) {
-            this.character.heal(100);
-            this.statusBar.setPercentage(this.character.energy);
-          }
-        }
+        this.collectCoin();
         return false;
       }
       return true;
     });
+  }
+
+  collectCoin() {
+    this.coinsCollected++;
+    const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
+    this.coinBar.setPercentage(percentage);
+    this.coinHealCounter++;
+    if (this.coinHealCounter >= 10 && this.character.energy < 100) {
+      this.coinHealCounter = 0;
+      this.character.heal(100);
+      this.statusBar.setPercentage(this.character.energy);
+    }
   }
 
   checkBottleCollisions() {
     if (this.bottlesCollected >= 10) return;
-    const c = this.character;
-    const pepeCenterX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
-    const pepeBottom = c.y + c.height - c.offset.bottom;
-    const pepeMidY = c.y + c.height / 2;
     this.level.bottles = this.level.bottles.filter((bottle) => {
-      const bLeft = bottle.x + bottle.offset.left;
-      const bRight = bottle.x + bottle.width - bottle.offset.right;
-      const bTop = bottle.y + bottle.offset.top;
-      const bBottom = bottle.y + bottle.height - bottle.offset.bottom;
-      const hits = pepeCenterX > bLeft && pepeCenterX < bRight && pepeBottom > bTop && pepeMidY < bBottom;
-      if (hits) {
-        this.bottlesCollected++;
-        const percentage = Math.min(100, this.bottlesCollected * 10);
-        this.bottleBar.setPercentage(percentage);
+      if (this.isBottleHittingCharacter(bottle)) {
+        this.collectBottle();
         return false;
       }
       return true;
     });
   }
 
+  isBottleHittingCharacter(bottle) {
+    const c = this.character;
+    const centerX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
+    const bottom = c.y + c.height - c.offset.bottom;
+    const midY = c.y + c.height / 2;
+    const bLeft = bottle.x + bottle.offset.left;
+    const bRight = bottle.x + bottle.width - bottle.offset.right;
+    const bTop = bottle.y + bottle.offset.top;
+    const bBottom = bottle.y + bottle.height - bottle.offset.bottom;
+    return centerX > bLeft && centerX < bRight && bottom > bTop && midY < bBottom;
+  }
+
+  collectBottle() {
+    this.bottlesCollected++;
+    this.bottleBar.setPercentage(Math.min(100, this.bottlesCollected * 10));
+  }
+
   draw() {
+    this.drawBackground();
+    this.drawHUD();
+    this.drawWorld();
+    this.drawOverlay(this.gameOver, this.gameOverImages, this.gameOverStep);
+    this.drawOverlay(this.gameWon, this.gameWonImages, this.gameWonStep);
+    requestAnimationFrame(() => {
+      if (!this.paused) this.draw();
+    });
+  }
+
+  drawBackground() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillStyle = "#5dbde0";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
     this.addBackgroundObjectsParallax(this.level.backgroundObjects);
     this.addBackgroundObjectsParallax(this.level.clouds);
+  }
 
-    // -------- Space for fixed objects --------
+  drawHUD() {
     this.addToMap(this.statusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
     this.addToMap(this.endbossBar);
-    this.ctx.translate(this.camera_x, 0); // Forwards
+  }
 
+  drawWorld() {
+    this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.throwableObjects);
+    this.ctx.translate(-this.camera_x, 0);
+  }
 
-    this.ctx.translate(-this.camera_x, 0); // Backwards
-
-    // draw() wird immer wieder aufgerufen
-    let self = this;
-    requestAnimationFrame(function () {
-      if (!self.paused) self.draw();
-    });
-
-    if (this.gameOver && this.gameOverStep >= 0 && this.gameOverImages[this.gameOverStep]) {
-      this.ctx.fillStyle = "rgba(0,0,0,0.55)";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      const img = this.gameOverImages[this.gameOverStep];
-      const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
-      const dw = img.width * scale;
-      const dh = img.height * scale;
-      const dx = (this.canvas.width - dw) / 2;
-      const dy = (this.canvas.height - dh) / 2;
-      this.ctx.drawImage(img, dx, dy, dw, dh);
-    }
-
-    if (this.gameWon && this.gameWonStep >= 0 && this.gameWonImages[this.gameWonStep]) {
-      this.ctx.fillStyle = "rgba(0,0,0,0.55)";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      const img = this.gameWonImages[this.gameWonStep];
-      const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
-      const dw = img.width * scale;
-      const dh = img.height * scale;
-      const dx = (this.canvas.width - dw) / 2;
-      const dy = (this.canvas.height - dh) / 2;
-      this.ctx.drawImage(img, dx, dy, dw, dh);
-    }
+  drawOverlay(active, images, step) {
+    if (!active || step < 0 || !images[step]) return;
+    this.ctx.fillStyle = "rgba(0,0,0,0.55)";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    const img = images[step];
+    const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
+    const dw = img.width * scale;
+    const dh = img.height * scale;
+    this.ctx.drawImage(img, (this.canvas.width - dw) / 2, (this.canvas.height - dh) / 2, dw, dh);
   }
 
   addBackgroundObjectsParallax(backgroundObjects) {
@@ -285,22 +302,17 @@ class World {
     this.ctx.restore();
   }
 
-  showGameWon() {
-    const paths = ["img/You won, you lost/You Win A.png", "img/You won, you lost/You won A.png"];
-    this.gameWonImages = paths.map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
-    this.gameWon = true;
-    this.gameWonStep = 0;
-    const delays = [1500, 0];
+  /**
+   * @param {number[]} delays
+   * @param {function(number):void} onStep
+   */
+  startImageSequence(delays, onStep) {
     let step = 0;
     const next = () => {
       if (delays[step] > 0) {
         setStoppableTimeout(() => {
           step++;
-          this.gameWonStep = step;
+          onStep(step);
           next();
         }, delays[step]);
       } else {
@@ -310,33 +322,15 @@ class World {
     next();
   }
 
+  showGameWon() {
+    this.gameWon = true;
+    this.gameWonStep = 0;
+    this.startImageSequence([1500, 0], (s) => (this.gameWonStep = s));
+  }
+
   showGameOver() {
-    const paths = [
-      "img/You won, you lost/Game Over.png",
-      "img/You won, you lost/You lost b.png",
-      "img/You won, you lost/You lost.png",
-      "img/You won, you lost/Game over A.png",
-    ];
-    this.gameOverImages = paths.map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
     this.gameOver = true;
     this.gameOverStep = 0;
-    const delays = [1500, 1500, 1500, 0];
-    let step = 0;
-    const next = () => {
-      if (delays[step] > 0) {
-        setStoppableTimeout(() => {
-          step++;
-          this.gameOverStep = step;
-          next();
-        }, delays[step]);
-      } else {
-        setStoppableTimeout(() => menuGoHome(), 2500);
-      }
-    };
-    next();
+    this.startImageSequence([1500, 1500, 1500, 0], (s) => (this.gameOverStep = s));
   }
 }
