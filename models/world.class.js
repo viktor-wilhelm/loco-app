@@ -60,9 +60,23 @@ class World {
     setStoppableInterval(() => {
       if (this.gameOver || this.gameWon || this.paused) return;
       this.level.enemies = this.level.enemies.filter((e) => !e.toBeRemoved);
+      this.checkEnemyRespawn();
       this.checkCollisions();
       this.checkBottleHitsEnemy();
     }, 50);
+  }
+
+  checkEnemyRespawn() {
+    const hasChickens = this.level.enemies.some(
+      (e) => (e instanceof Chicken || e instanceof SmallChicken) && !e.isDead,
+    );
+    if (!hasChickens) this.spawnChickenWave();
+  }
+
+  spawnChickenWave() {
+    const newEnemies = createEnemies(this.character.x + 800).filter((e) => !(e instanceof Endboss));
+    newEnemies.forEach((e) => (e.world = this));
+    this.level.enemies.push(...newEnemies);
   }
 
   checkThrowObjects() {
@@ -78,7 +92,7 @@ class World {
     const bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
     this.throwableObjects.push(bottle);
     this.bottlesCollected--;
-    this.bottleBar.setPercentage(Math.max(0, this.bottlesCollected * 10));
+    this.bottleBar.setPercentage(this.calcBottleBarPct());
     if (this.bottlesCollected === 0 && this.level.bottles.length === 0) {
       this.spawnBottleRefill();
     }
@@ -127,11 +141,7 @@ class World {
     enemy.hit();
     enemy.hit();
     this.endbossBar.setPercentage(enemy.energy);
-    const bounceDirection = this.character.x < enemy.x ? -1 : 1;
-    this.character.x -= bounceDirection * 60;
-    this.character.speedY = 20;
-    this.character.hit();
-    this.statusBar.setPercentage(this.character.energy);
+    this.character.speedY = 30;
     setStoppableTimeout(() => {
       this.activeEnemyInteraction = false;
     }, 800);
@@ -216,9 +226,14 @@ class World {
     return centerX > bLeft && centerX < bRight && bottom > bTop && midY < bBottom;
   }
 
+  calcBottleBarPct() {
+    if (this.bottlesCollected === 0) return 0;
+    return Math.min(100, Math.ceil((this.bottlesCollected / 10) * 5) * 20);
+  }
+
   collectBottle() {
     this.bottlesCollected++;
-    this.bottleBar.setPercentage(Math.min(100, this.bottlesCollected * 10));
+    this.bottleBar.setPercentage(this.calcBottleBarPct());
   }
 
   draw() {

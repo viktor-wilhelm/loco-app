@@ -2,7 +2,7 @@ class Endboss extends MovableObject {
   height = 340;
   width = 225;
   y = 110;
-  speed = 0.8;
+  speed = 0.08;
   energy = 200;
   isDead = false;
   isHurt = false;
@@ -56,7 +56,7 @@ class Endboss extends MovableObject {
   jumpTowardsPepe() {
     if (!this.world) return;
     this.isJumping = true;
-    this.speedY = 20;
+    this.speedY = 35;
     const direction = this.world.character.x < this.x ? -1 : 1;
     this.startJumpMoveInterval(direction);
   }

@@ -22,7 +22,10 @@ class Character extends MovableObject {
   }
 
   isJumpingOn(enemy) {
-    return (this.isAboveGround() || this.speedY < 0) && this.y + this.height < enemy.y + enemy.height;
+    const isFalling = this.speedY < 0 || (this.speedY === 0 && this.isAboveGround());
+    const pepeFootAboveEnemyBottom =
+      this.y + this.height - this.offset.bottom < enemy.y + enemy.height - enemy.offset.bottom;
+    return isFalling && pepeFootAboveEnemyBottom;
   }
 
   animate() {
