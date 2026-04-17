@@ -60,20 +60,22 @@ class BossChicken extends MovableObject {
       () => {
         if (!this.isDead && !this.isAboveGround()) {
           this.speedY = 30 + Math.random() * 4;
-          if (this.world) {
-            const direction = this.world.character.x < this.x ? -1 : 1;
-            const jumpDash = setStoppableInterval(() => {
-              if (this.isDead) {
-                clearInterval(jumpDash);
-                return;
-              }
-              this.x += direction * 3;
-            }, 30);
-            setStoppableTimeout(() => clearInterval(jumpDash), 600);
-          }
+          if (this.world) this.startJumpDash();
         }
       },
       2000 + Math.random() * 1000,
     );
+  }
+
+  startJumpDash() {
+    const direction = this.world.character.x < this.x ? -1 : 1;
+    const jumpDash = setStoppableInterval(() => {
+      if (this.isDead) {
+        clearInterval(jumpDash);
+        return;
+      }
+      this.x += direction * 3;
+    }, 30);
+    setStoppableTimeout(() => clearInterval(jumpDash), 600);
   }
 }
