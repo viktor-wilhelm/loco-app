@@ -109,3 +109,68 @@
   color: #ffd740;
   text-decoration: underline;
 }
+
+/* =====================
+   Turn Device Overlay
+   ===================== */
+
+.turn-device-overlay {
+  display: none;
+}
+
+@media (max-width: 670px) {
+  .game__canvas {
+    display: none !important;
+  }
+
+  .game__start-screen {
+    display: none;
+  }
+
+  .game__ui {
+    display: none;
+  }
+
+  .game {
+    aspect-ratio: 720 / 480;
+  }
+
+  .menu-popup {
+    display: none !important;
+  }
+
+  .footer {
+    display: none;
+  }
+}
+
+@media (max-width: 670px) and (orientation: portrait) {
+  .turn-device-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    position: absolute;
+    inset: 10% 8%;
+    z-index: 999;
+    background: #e85d04;
+    border-radius: 1rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .turn-device-overlay__icon {
+    width: clamp(64px, 15vw, 96px);
+    height: clamp(64px, 15vw, 96px);
+    fill: #000;
+  }
+
+  .turn-device-overlay__text {
+    font-family: "Zabars", Arial, sans-serif;
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    letter-spacing: 2px;
+    color: #fff;
+    text-align: center;
+    margin: 0;
+  }
+}
