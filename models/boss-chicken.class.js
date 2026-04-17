@@ -32,6 +32,7 @@ class BossChicken extends MovableObject {
 
   die() {
     this.isDead = true;
+    this.speedY = 0;
     this.loadImage(IMAGE_CHICKEN_DEAD);
     this.speed = 0;
     setStoppableTimeout(() => {
@@ -58,21 +59,23 @@ class BossChicken extends MovableObject {
     setStoppableInterval(
       () => {
         if (!this.isDead && !this.isAboveGround()) {
-          this.speedY = 12 + Math.random() * 4;
-          if (this.world) {
-            const direction = this.world.character.x < this.x ? -1 : 1;
-            const jumpDash = setStoppableInterval(() => {
-              if (this.isDead) {
-                clearInterval(jumpDash);
-                return;
-              }
-              this.x += direction * 3;
-            }, 30);
-            setStoppableTimeout(() => clearInterval(jumpDash), 600);
-          }
+          this.speedY = 30 + Math.random() * 4;
+          if (this.world) this.startJumpDash();
         }
       },
       2000 + Math.random() * 1000,
     );
+  }
+
+  startJumpDash() {
+    const direction = this.world.character.x < this.x ? -1 : 1;
+    const jumpDash = setStoppableInterval(() => {
+      if (this.isDead) {
+        clearInterval(jumpDash);
+        return;
+      }
+      this.x += direction * 3;
+    }, 30);
+    setStoppableTimeout(() => clearInterval(jumpDash), 600);
   }
 }

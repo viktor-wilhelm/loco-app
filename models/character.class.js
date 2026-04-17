@@ -22,62 +22,78 @@ class Character extends MovableObject {
   }
 
   isJumpingOn(enemy) {
-    return (this.isAboveGround() || this.speedY < 0) && this.y + this.height < enemy.y + enemy.height;
+    const isFalling = this.speedY < 0 || (this.speedY === 0 && this.isAboveGround());
+    const pepeFootAboveEnemyBottom =
+      this.y + this.height - this.offset.bottom < enemy.y + enemy.height - enemy.offset.bottom;
+    return isFalling && pepeFootAboveEnemyBottom;
+  }
+
+  handleMovement() {
+    this.handleMoveRight();
+    this.handleMoveLeft();
+    this.handleJump();
+  }
+
+  handleMoveRight() {
+    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+      this.lastMoveTime = Date.now();
+    }
+  }
+
+  handleMoveLeft() {
+    if (this.world.keyboard.LEFT && this.x > 120) {
+      this.moveLeft();
+      this.otherDirection = true;
+      this.lastMoveTime = Date.now();
+    }
+  }
+
+  handleJump() {
+    if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
+      this.jump();
+      this.lastMoveTime = Date.now();
+    }
   }
 
   animate() {
     setStoppableInterval(() => {
-      if (this.world.paused) return;
-      if (this.isDead()) return;
-      if (this.world.gameWon) return;
-
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.otherDirection = false;
-        this.lastMoveTime = Date.now();
-      }
-
-      if (this.world.keyboard.LEFT && this.x > 120) {
-        this.moveLeft();
-        this.otherDirection = true;
-        this.lastMoveTime = Date.now();
-      }
-
-      if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
-        this.jump();
-        this.lastMoveTime = Date.now();
-      }
-
+      if (this.world.paused || this.isDead() || this.world.gameWon) return;
+      this.handleMovement();
       this.world.camera_x = -this.x + 120;
     }, 1000 / 60);
 
     setStoppableInterval(() => {
-      if (this.isDead()) {
-        if (!this.deathAnimationDone) {
-          this.playAnimation(IMAGES_CHARACTER_DEAD);
-          if (this.currentImage >= IMAGES_CHARACTER_DEAD.length) {
-            this.deathAnimationDone = true;
-            this.img = this.imageCache[IMAGES_CHARACTER_DEAD[IMAGES_CHARACTER_DEAD.length - 1]];
-            setStoppableTimeout(() => this.world.showGameOver(), 800);
-          }
-        }
-        return;
-      }
-
-      if (this.isHurt()) {
-        this.playAnimation(IMAGES_CHARACTER_HURT);
-      } else if (this.isAboveGround()) {
-        this.playAnimation(IMAGES_CHARACTER_JUMPING);
-      } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        this.playAnimation(IMAGES_CHARACTER_WALKING);
-      } else {
-        const idleSeconds = (Date.now() - this.lastMoveTime) / 1000;
-        if (idleSeconds > 5) {
-          this.playAnimation(IMAGES_CHARACTER_SLEEP);
-        } else {
-          this.playAnimation(IMAGES_CHARACTER_IDLE);
-        }
-      }
+      if (this.isDead()) return this.handleDeathAnimation();
+      this.handleStateAnimation();
     }, 100);
+  }
+
+  handleDeathAnimation() {
+    if (this.deathAnimationDone) return;
+    this.playAnimation(IMAGES_CHARACTER_DEAD);
+    if (this.currentImage >= IMAGES_CHARACTER_DEAD.length) {
+      this.deathAnimationDone = true;
+      this.img = this.imageCache[IMAGES_CHARACTER_DEAD[IMAGES_CHARACTER_DEAD.length - 1]];
+      setStoppableTimeout(() => this.world.showGameOver(), 800);
+    }
+  }
+
+  handleStateAnimation() {
+    if (this.isHurt()) {
+      this.playAnimation(IMAGES_CHARACTER_HURT);
+    } else if (this.isAboveGround()) {
+      this.playAnimation(IMAGES_CHARACTER_JUMPING);
+    } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      this.playAnimation(IMAGES_CHARACTER_WALKING);
+    } else {
+      this.playIdleAnimation();
+    }
+  }
+
+  playIdleAnimation() {
+    const idleSeconds = (Date.now() - this.lastMoveTime) / 1000;
+    this.playAnimation(idleSeconds > 5 ? IMAGES_CHARACTER_SLEEP : IMAGES_CHARACTER_IDLE);
   }
 }
