@@ -21,12 +21,17 @@ function updateSliderFill(slider) {
   slider.style.setProperty("--fill", pct + "%");
 }
 
+function setTouchControlsVisible(visible) {
+  document.getElementById("touch-controls").classList.toggle("game__touch-controls--active", visible);
+}
+
 function startGame() {
   clearAllIntervals();
   level1 = createLevel1();
   document.getElementById("start-screen").style.display = "none";
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  setTouchControlsVisible(true);
 }
 
 function syncMenuSlider() {
@@ -55,6 +60,7 @@ function updatePrimaryMenuBtn() {
 
 function openMenu() {
   if (world) world.paused = true;
+  setTouchControlsVisible(false);
   syncMenuSlider();
   updatePrimaryMenuBtn();
   document.getElementById("menu-popup").removeAttribute("hidden");
@@ -69,6 +75,7 @@ function closeMenu() {
     }, 1000);
     world.paused = false;
     world.draw();
+    setTouchControlsVisible(true);
   }
 }
 
@@ -86,6 +93,7 @@ function menuGoHome() {
   }
   world = null;
   document.getElementById("start-screen").style.display = "";
+  setTouchControlsVisible(false);
 }
 
 function menuShowControls() {
@@ -119,3 +127,60 @@ function handleKey(e, isPressed) {
 
 window.addEventListener("keydown", (e) => handleKey(e, true));
 window.addEventListener("keyup", (e) => handleKey(e, false));
+
+function bindTouchEvents() {
+  const map = [
+    [
+      "touch-left",
+      () => {
+        keyboard.LEFT = true;
+      },
+      () => {
+        keyboard.LEFT = false;
+      },
+    ],
+    [
+      "touch-right",
+      () => {
+        keyboard.RIGHT = true;
+      },
+      () => {
+        keyboard.RIGHT = false;
+      },
+    ],
+    [
+      "touch-jump",
+      () => {
+        keyboard.UP = true;
+      },
+      () => {
+        keyboard.UP = false;
+      },
+    ],
+    [
+      "touch-throw",
+      () => {
+        keyboard.D = true;
+        keyboard.THROW_PENDING = true;
+      },
+      () => {
+        keyboard.D = false;
+      },
+    ],
+  ];
+  map.forEach(([id, onStart, onEnd]) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        onStart();
+      },
+      { passive: false },
+    );
+    btn.addEventListener("touchend", onEnd);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", bindTouchEvents);

@@ -346,12 +346,14 @@ class World {
 
   showGameWon() {
     this.gameWon = true;
+    document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameWonStep = 0;
     this.startImageSequence([1500, 0], (s) => (this.gameWonStep = s));
   }
 
   showGameOver() {
     this.gameOver = true;
+    document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameOverStep = 0;
     this.startImageSequence([1500, 1500, 1500, 0], (s) => (this.gameOverStep = s));
   }
