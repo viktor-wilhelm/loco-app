@@ -89,7 +89,7 @@ function menuGoHome() {
 }
 
 function menuShowControls() {
-  loadOverlay("templates/controls.html");
+  loadOverlay("templates/menu-controls.html");
   closeMenu();
 }
 function toggleFullscreen() {
