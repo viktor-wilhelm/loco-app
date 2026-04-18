@@ -21,6 +21,7 @@ npm-debug.log*
 # Node (falls npm-Pakete für Tools verwendet werden)
 node_modules/
 package-lock.json
+package.json
 
 # Build-Ausgaben
 dist/
