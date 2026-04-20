@@ -66,13 +66,18 @@ class Character extends MovableObject {
     }, 1000 / 60);
 
     setStoppableInterval(() => {
-      if (this.isDead()) return this.handleDeathAnimation();
+      if (this.world.paused || this.isDead() || this.world.gameWon) {
+        this.world.audioManager?.stopRunSound();
+        if (this.isDead()) return this.handleDeathAnimation();
+        return;
+      }
       this.handleStateAnimation();
     }, 100);
   }
 
   handleDeathAnimation() {
     if (this.deathAnimationDone) return;
+    this.world.audioManager?.stopRunSound();
     this.playAnimation(IMAGES_CHARACTER_DEAD);
     if (this.currentImage >= IMAGES_CHARACTER_DEAD.length) {
       this.deathAnimationDone = true;
@@ -83,12 +88,16 @@ class Character extends MovableObject {
 
   handleStateAnimation() {
     if (this.isHurt()) {
+      this.world.audioManager?.stopRunSound();
       this.playAnimation(IMAGES_CHARACTER_HURT);
     } else if (this.isAboveGround()) {
+      this.world.audioManager?.stopRunSound();
       this.playAnimation(IMAGES_CHARACTER_JUMPING);
     } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      this.world.audioManager?.playRunSound();
       this.playAnimation(IMAGES_CHARACTER_WALKING);
     } else {
+      this.world.audioManager?.stopRunSound();
       this.playIdleAnimation();
     }
   }

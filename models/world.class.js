@@ -91,10 +91,12 @@ class World {
     const facingLeft = this.character.otherDirection;
     const offsetX = facingLeft ? -10 : 40;
     const bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, facingLeft);
+    bottle.onSplash = () => {
+      this.audioManager?.playSound("bottleSplash");
+    };
     this.throwableObjects.push(bottle);
     this.bottlesCollected--;
     this.bottleBar.setPercentage(this.calcBottleBarPct());
-    this.audioManager?.playSound("throwBottle");
     if (this.bottlesCollected === 0 && this.level.bottles.length === 0) {
       this.spawnBottleRefill();
     }
@@ -152,6 +154,7 @@ class World {
 
   handleJumpOnChicken(enemy) {
     enemy.die();
+    this.audioManager?.playSound(enemy instanceof SmallChicken ? "smallChickenDie" : "enemyDie", 1000);
     this.character.speedY = 15;
     setStoppableTimeout(() => {
       this.activeEnemyInteraction = false;
@@ -177,7 +180,7 @@ class World {
       this.audioManager?.playSound("enemyHit");
     } else {
       enemy.die();
-      this.audioManager?.playSound("enemyDie");
+      this.audioManager?.playSound(enemy instanceof SmallChicken ? "smallChickenDie" : "enemyDie", 1000);
     }
     bottle.isSplashing = true;
     bottle.playSplash();
@@ -240,6 +243,7 @@ class World {
   collectBottle() {
     this.bottlesCollected++;
     this.bottleBar.setPercentage(this.calcBottleBarPct());
+    this.audioManager?.playSound("bottlePickup");
   }
 
   draw() {
@@ -352,6 +356,7 @@ class World {
 
   showGameWon() {
     this.gameWon = true;
+    this.audioManager?.playSound("gameWon");
     document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameWonStep = 0;
     this.startImageSequence([1500, 0], (s) => (this.gameWonStep = s));
@@ -359,6 +364,7 @@ class World {
 
   showGameOver() {
     this.gameOver = true;
+    this.audioManager?.playSound("gameOver");
     document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameOverStep = 0;
     this.startImageSequence([1500, 1500, 1500, 0], (s) => (this.gameOverStep = s));

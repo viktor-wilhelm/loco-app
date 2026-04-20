@@ -4,15 +4,26 @@
  */
 class AudioManager {
   soundSources = {
-    jump: ["audio/jump.mp3"],
-    throwBottle: ["audio/throw.mp3"],
-    coin: ["audio/coin.mp3"],
-    enemyHit: ["audio/enemy-hit.mp3"],
-    enemyDie: ["audio/enemy-die.mp3"],
-    playerHurt: ["audio/player-hurt.mp3"],
-    gameStart: ["audio/game-start.mp3"],
-    gameOver: ["audio/game-over.mp3"],
+    jump: ["audio/pepe-jump-dragon-studio-cartoon.mp3"],
+    throwBottle: [],
+    bottleSplash: ["audio/pepe-glass-bottle-smash.mp3"],
+    bottlePickup: ["audio/pepe-pickup-bottle.mp3"],
+    coin: ["audio/pepe-coin.mp3"],
+    enemyHit: ["audio/chicken-death.mp3", "audio/chicken-small-death.mp3"],
+    enemyDie: ["audio/chicken-death.mp3"],
+    smallChickenDie: ["audio/chicken-small-death.mp3"],
+    endbossDie: ["audio/Endboss-death.mp3"],
+    endbossHurt: ["audio/Endboss-hurt.mp3"],
+    playerHurt: ["audio/pepe-hurt.mp3"],
+    gameStart: [],
+    gameOver: ["audio/game-over-deep-male-voice-clip.mp3"],
+    gameWon: ["audio/you-win.mp3"],
   };
+
+  runSoundSource = "audio/pepe-running-on-sand.mp3";
+  runSoundElement = null;
+  runSoundTimer = null;
+  runSoundSegmentMs = 1550;
 
   bgmSources = {
     menu: ["audio/background-desert-shimmer.mp3"],
@@ -23,6 +34,9 @@ class AudioManager {
   currentBgmName = null;
   muted = false;
   volume = 1;
+  bgmVolume = 0.6; // Menu background music volume
+  gameBgmVolume = 0.8; // Game background music volume, slightly louder than menu
+  sfxVolume = 0.4; // Sound effects volume (quieter)
 
   constructor(initialVolume = 1) {
     this.volume = this.clampVolume(initialVolume);
@@ -32,16 +46,23 @@ class AudioManager {
   /**
    * Plays a sound effect by name.
    * @param {string} name - Sound identifier.
+   * @param {number} [durationMs] - Optional maximum play duration in milliseconds.
    */
-  playSound(name) {
+  playSound(name, durationMs) {
     if (this.muted) return;
     const sources = this.soundSources[name];
     if (!sources?.length) return;
     const src = sources[Math.floor(Math.random() * sources.length)];
     const audio = new Audio(src);
-    audio.volume = this.volume;
+    audio.volume = this.sfxVolume;
     audio.muted = this.muted;
     audio.play().catch(() => {});
+    if (durationMs > 0) {
+      setTimeout(() => {
+        audio.pause();
+        audio.currentTime = 0;
+      }, durationMs);
+    }
   }
 
   /**
@@ -70,11 +91,49 @@ class AudioManager {
     const src = sources[Math.floor(Math.random() * sources.length)];
     const audio = new Audio(src);
     audio.loop = true;
-    audio.volume = this.volume;
+    audio.volume = name === "game" ? this.gameBgmVolume : this.bgmVolume;
     audio.muted = this.muted;
     audio.play().catch(() => {});
     this.bgmElement = audio;
     this.currentBgmName = name;
+  }
+
+  /**
+   * Play a looping sound effect when Pepe is running.
+   */
+  playRunSound() {
+    if (this.muted) return;
+    if (this.runSoundElement && !this.runSoundElement.paused) return;
+    if (!this.runSoundSource) return;
+
+    this.stopRunSound();
+    this.runSoundElement = new Audio(this.runSoundSource);
+    this.runSoundElement.volume = this.sfxVolume;
+    this.runSoundElement.muted = this.muted;
+    this.runSoundElement.currentTime = 0;
+    this.runSoundElement.play().catch(() => {});
+
+    this.runSoundTimer = setInterval(() => {
+      if (!this.runSoundElement) return;
+      this.runSoundElement.pause();
+      this.runSoundElement.currentTime = 0;
+      this.runSoundElement.play().catch(() => {});
+    }, this.runSoundSegmentMs);
+  }
+
+  /**
+   * Stop the running sound.
+   */
+  stopRunSound() {
+    if (this.runSoundTimer) {
+      clearInterval(this.runSoundTimer);
+      this.runSoundTimer = null;
+    }
+    if (this.runSoundElement) {
+      this.runSoundElement.pause();
+      this.runSoundElement.currentTime = 0;
+      this.runSoundElement = null;
+    }
   }
 
   /**
@@ -94,9 +153,23 @@ class AudioManager {
    * @param {number} volume
    */
   setVolume(volume) {
-    this.volume = this.clampVolume(volume);
+    const clampedVolume = this.clampVolume(volume);
+    if (this.volume === 0 && clampedVolume > 0) {
+      // First time setting volume from 0, set relative volumes
+      this.bgmVolume = clampedVolume * 0.8;
+      this.sfxVolume = clampedVolume * 0.6;
+    } else if (this.volume > 0) {
+      // Adjust existing volumes proportionally
+      const ratio = clampedVolume / this.volume;
+      this.bgmVolume = Math.min(1, this.bgmVolume * ratio);
+      this.sfxVolume = Math.min(1, this.sfxVolume * ratio);
+    }
+    this.volume = clampedVolume;
     if (this.bgmElement) {
-      this.bgmElement.volume = this.volume;
+      this.bgmElement.volume = this.bgmVolume;
+    }
+    if (this.runSoundElement) {
+      this.runSoundElement.volume = this.sfxVolume;
     }
   }
 
