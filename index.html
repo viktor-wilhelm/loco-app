@@ -53,7 +53,12 @@
         <canvas id="canvas" class="game__canvas" width="720" height="480"></canvas>
 
         <div class="game__ui">
-          <input type="range" id="volume-slider" class="game__volume-slider" min="0" max="1" step="0.01" value="1" />
+          <div class="game__sound-control">
+            <input type="range" id="volume-slider" class="game__volume-slider" min="0" max="1" step="0.01" value="1" />
+            <button class="game__btn game__btn--mute" id="mute-btn" type="button" onclick="toggleMute()" aria-label="Toggle sound">
+              🔊
+            </button>
+          </div>
           <div class="game__actions">
             <button class="game__btn game__btn--menu" onclick="openMenu()">MENU</button>
             <button class="game__btn game__btn--fullscreen" onclick="toggleFullscreen()" title="Vollbild">
@@ -84,9 +89,6 @@
                 step="0.01"
                 value="1"
               />
-              <button class="menu-btn menu-btn--small" id="menu-mute-btn" type="button" onclick="toggleMute()">
-                Mute
-              </button>
             </div>
             <div class="menu-btn__divider"></div>
             <button

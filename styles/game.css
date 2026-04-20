@@ -21,19 +21,55 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  width: min(92%, 780px);
   z-index: 20;
+}
+
+.game__sound-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .game__volume-slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 140px;
+  width: 180px;
   height: 4px;
   background: linear-gradient(to right, #f5c518 var(--fill, 100%), rgba(255, 255, 255, 0.8) var(--fill, 100%));
   border-radius: 2px;
   outline: none;
   cursor: pointer;
+}
+
+.game__btn--mute {
+  font-size: 1.2rem;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #f5c518;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game__btn--mute:hover {
+  opacity: 0.8;
+}
+
+.game__btn--menu {
+  font-family: "Zabars", Arial, sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  padding: 4px 8px 2px 14px;
+  background: #f5c518;
+  border: 2px solid #c8960c;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 2px 3px 0 #8b6000;
 }
 
 .game__volume-slider::-moz-range-track {
@@ -71,18 +107,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.game__btn--menu {
-  font-family: "Zabars", Arial, sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 3px;
-  padding: 4px 8px 2px 14px;
-  background: #f5c518;
-  border: 2px solid #c8960c;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 2px 3px 0 #8b6000;
 }
 
 .game__btn--menu:hover {

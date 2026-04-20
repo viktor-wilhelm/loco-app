@@ -11,6 +11,7 @@ function init() {
   window.masterVolume = parseFloat(slider.value);
   audioManager = new AudioManager(window.masterVolume);
   audioManager.playBackground("menu");
+  updateMuteButton();
   updateSliderFill(slider);
   slider.addEventListener("input", () => {
     window.masterVolume = parseFloat(slider.value);
@@ -55,9 +56,9 @@ function syncMenuSlider() {
 }
 
 function updateMuteButton() {
-  const muteBtn = document.getElementById("menu-mute-btn");
+  const muteBtn = document.getElementById("mute-btn");
   if (!muteBtn || !audioManager) return;
-  muteBtn.textContent = audioManager.muted ? "Unmute" : "Mute";
+  muteBtn.textContent = audioManager.muted ? "🔇" : "🔊";
 }
 
 function toggleMute() {
