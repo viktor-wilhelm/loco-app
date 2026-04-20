@@ -54,7 +54,7 @@
 
         <div class="game__ui">
           <div class="game__sound-control">
-            <input type="range" id="volume-slider" class="game__volume-slider" min="0" max="1" step="0.01" value="1" />
+            <input type="range" id="volume-slider" class="game__volume-slider" min="0" max="1" step="0.01" value="1" tabindex="-1" />
             <button class="game__btn game__btn--mute" id="mute-btn" type="button" onclick="toggleMute()" aria-label="Toggle sound">
               🔊
             </button>
@@ -88,6 +88,7 @@
                 max="1"
                 step="0.01"
                 value="1"
+                tabindex="-1"
               />
             </div>
             <div class="menu-btn__divider"></div>
