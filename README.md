@@ -1,6 +1,17 @@
 # El Pollo Loco
 
-A browser-based 2D jump-and-run game built with vanilla JavaScript, HTML5 Canvas, and CSS. You play as Pepe — a man on a mission to defeat the end boss and his army of chickens.
+El Pollo Loco ist ein actiongeladenes 2D Jump & Run Game für den Browser – komplett entwickelt mit Vanilla JavaScript, HTML5 Canvas und CSS3. Schlüpfe in die Rolle von Pepe und stelle dich einer verrückten Hühnerarmee sowie dem gefürchteten Endboss! Sammle Münzen, werfe Salsa-Flaschen, weiche Hindernissen aus und erlebe flüssige Animationen, liebevoll gestaltete Grafiken und einen mitreißenden Soundtrack.
+
+**Features:**
+- Moderne OOP-Architektur (ES6-Klassen)
+- Parallax-Scrolling & dynamische Hintergründe
+- Flüssige Animationen & State-Machine für Charaktere
+- Responsive UI für Desktop & Mobile (Touch-Steuerung)
+- Soundeffekte & Musik (mit Mute-Option)
+- Speicherbarer Fortschritt (localStorage)
+- Sofort spielbar – keine Installation, kein Build nötig
+
+Tauche ein in ein humorvolles Abenteuer, besiege die Hühner und werde zum Helden von El Pollo Loco!
 
 ![El Pollo Loco Screenshot](img/9_intro_outro_screens/start/startscreen_1.png)
 
