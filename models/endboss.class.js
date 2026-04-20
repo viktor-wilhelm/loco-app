@@ -89,6 +89,7 @@ class Endboss extends MovableObject {
 
   handleHurt() {
     this.showHurt();
+    this.world.audioManager?.playSound("endbossHurt", 3000);
     if (this.world) this.spawnChickens();
   }
 
@@ -112,6 +113,7 @@ class Endboss extends MovableObject {
   die() {
     this.isDead = true;
     this.speed = 0;
+    this.world.audioManager?.playSound("endbossDie");
     setStoppableTimeout(() => {
       this.toBeRemoved = true;
       if (this.world) this.world.showGameWon();

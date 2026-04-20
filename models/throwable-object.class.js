@@ -1,6 +1,7 @@
 class ThrowableObject extends MovableObject {
   isSplashing = false;
   isUsed = false;
+  onSplash = null;
 
   constructor(x, y, facingLeft = false) {
     super().loadImage("img/6_salsa_bottle/salsa_bottle.png");
@@ -40,6 +41,13 @@ class ThrowableObject extends MovableObject {
     this.speedY = 0;
     const splashY = this.y;
     let frame = 0;
+
+    if (this.onSplash) {
+      setTimeout(() => {
+        this.onSplash?.();
+      }, 120);
+    }
+
     const splashInterval = setStoppableInterval(() => {
       this.y = splashY;
       this.img = this.imageCache[IMAGES_BOTTLE_SPLASH[frame]];
