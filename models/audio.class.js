@@ -34,7 +34,8 @@ class AudioManager {
   currentBgmName = null;
   muted = false;
   volume = 1;
-  bgmVolume = 0.6; // Background music volume (louder)
+  bgmVolume = 0.6; // Menu background music volume
+  gameBgmVolume = 0.8; // Game background music volume, slightly louder than menu
   sfxVolume = 0.4; // Sound effects volume (quieter)
 
   constructor(initialVolume = 1) {
@@ -90,7 +91,7 @@ class AudioManager {
     const src = sources[Math.floor(Math.random() * sources.length)];
     const audio = new Audio(src);
     audio.loop = true;
-    audio.volume = this.bgmVolume;
+    audio.volume = name === "game" ? this.gameBgmVolume : this.bgmVolume;
     audio.muted = this.muted;
     audio.play().catch(() => {});
     this.bgmElement = audio;

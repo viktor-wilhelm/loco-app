@@ -1,8 +1,16 @@
+/**
+ * @fileoverview Main game initialization and UI control logic for El Pollo Loco.
+ * @description Handles volume controls, menu state, input bindings and game start/stop.
+ */
+
 let canvas;
 let world;
 let audioManager;
 let keyboard = new Keyboard();
 
+/**
+ * Initialize the game UI, volume slider, and audio manager.
+ */
 function init() {
   document.querySelector(".preloader").classList.add("preloader--hidden");
   const slider = document.getElementById("volume-slider");
@@ -21,15 +29,26 @@ function init() {
   });
 }
 
+/**
+ * Update the CSS fill level for a volume slider.
+ * @param {HTMLInputElement} slider - The range input element.
+ */
 function updateSliderFill(slider) {
   const pct = parseFloat(slider.value) * 100;
   slider.style.setProperty("--fill", pct + "%");
 }
 
+/**
+ * Show or hide mobile touch controls.
+ * @param {boolean} visible - Whether the touch controls should be visible.
+ */
 function setTouchControlsVisible(visible) {
   document.getElementById("touch-controls").classList.toggle("game__touch-controls--active", visible);
 }
 
+/**
+ * Start the game, create the world, and switch to gameplay state.
+ */
 function startGame() {
   clearAllIntervals();
   level1 = createLevel1();
@@ -41,6 +60,9 @@ function startGame() {
   setTouchControlsVisible(true);
 }
 
+/**
+ * Keep the in-menu volume slider synced with the main UI slider.
+ */
 function syncMenuSlider() {
   const menuSlider = document.getElementById("menu-volume-slider");
   menuSlider.value = document.getElementById("volume-slider").value;
@@ -55,17 +77,26 @@ function syncMenuSlider() {
   });
 }
 
+/**
+ * Update the visible mute button icon according to audio state.
+ */
 function updateMuteButton() {
   const muteBtn = document.getElementById("mute-btn");
   if (!muteBtn || !audioManager) return;
   muteBtn.textContent = audioManager.muted ? "🔇" : "🔊";
 }
 
+/**
+ * Toggle master audio mute state and refresh the button.
+ */
 function toggleMute() {
   audioManager?.toggleMute();
   updateMuteButton();
 }
 
+/**
+ * Update the primary menu button text and action.
+ */
 function updatePrimaryMenuBtn() {
   const primaryBtn = document.querySelector(".menu-btn--primary");
   if (world) {
@@ -77,6 +108,9 @@ function updatePrimaryMenuBtn() {
   }
 }
 
+/**
+ * Open the in-game menu and pause gameplay if necessary.
+ */
 function openMenu() {
   if (world) world.paused = true;
   setTouchControlsVisible(false);
@@ -86,6 +120,9 @@ function openMenu() {
   document.getElementById("menu-popup").removeAttribute("hidden");
 }
 
+/**
+ * Close the in-game menu and resume gameplay.
+ */
 function closeMenu() {
   document.getElementById("menu-popup").setAttribute("hidden", "");
   if (world) {
@@ -99,11 +136,17 @@ function closeMenu() {
   }
 }
 
+/**
+ * Close the menu and start a new game.
+ */
 function menuStartGame() {
   closeMenu();
   startGame();
 }
 
+/**
+ * Return to the home screen and reset the current game.
+ */
 function menuGoHome() {
   closeMenu();
   clearAllIntervals();
@@ -117,11 +160,19 @@ function menuGoHome() {
   setTouchControlsVisible(false);
 }
 
+/**
+ * Open the controls overlay from the menu.
+ */
 function menuShowControls() {
   loadOverlay("templates/menu-controls.html");
   closeMenu();
 }
 
+/**
+ * Handle keyboard input and translate keys into game actions.
+ * @param {KeyboardEvent} e - The keyboard event.
+ * @param {boolean} isPressed - Whether the key is pressed or released.
+ */
 function handleKey(e, isPressed) {
   const keyMap = {
     ArrowRight: "RIGHT",
@@ -141,35 +192,18 @@ function handleKey(e, isPressed) {
 window.addEventListener("keydown", (e) => handleKey(e, true));
 window.addEventListener("keyup", (e) => handleKey(e, false));
 
-function bindTouchEvents() {
-  const map = [
-    [
-      "touch-left",
-      () => {
-        keyboard.LEFT = true;
-      },
-      () => {
-        keyboard.LEFT = false;
-      },
-    ],
-    [
-      "touch-right",
-      () => {
-        keyboard.RIGHT = true;
-      },
-      () => {
-        keyboard.RIGHT = false;
-      },
-    ],
-    [
-      "touch-jump",
-      () => {
-        keyboard.UP = true;
-      },
-      () => {
-        keyboard.UP = false;
-      },
-    ],
+/**
+ * Bind touch buttons to game input actions for mobile devices.
+ */
+/**
+ * Create an array of mobile touch button bindings.
+ * @returns {Array<[string, Function, Function]>}
+ */
+function createTouchMap() {
+  return [
+    ["touch-left", () => (keyboard.LEFT = true), () => (keyboard.LEFT = false)],
+    ["touch-right", () => (keyboard.RIGHT = true), () => (keyboard.RIGHT = false)],
+    ["touch-jump", () => (keyboard.UP = true), () => (keyboard.UP = false)],
     [
       "touch-throw",
       () => {
@@ -181,19 +215,33 @@ function bindTouchEvents() {
       },
     ],
   ];
-  map.forEach(([id, onStart, onEnd]) => {
-    const btn = document.getElementById(id);
-    if (!btn) return;
-    btn.addEventListener(
-      "touchstart",
-      (e) => {
-        e.preventDefault();
-        onStart();
-      },
-      { passive: false },
-    );
-    btn.addEventListener("touchend", onEnd);
-  });
+}
+
+/**
+ * Attach touch event handlers to a button element.
+ * @param {string} id
+ * @param {Function} onStart
+ * @param {Function} onEnd
+ */
+function bindTouchButton(id, onStart, onEnd) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener(
+    "touchstart",
+    (e) => {
+      e.preventDefault();
+      onStart();
+    },
+    { passive: false },
+  );
+  btn.addEventListener("touchend", onEnd);
+}
+
+/**
+ * Bind touch buttons to game input actions for mobile devices.
+ */
+function bindTouchEvents() {
+  createTouchMap().forEach(([id, onStart, onEnd]) => bindTouchButton(id, onStart, onEnd));
 }
 
 document.addEventListener("DOMContentLoaded", bindTouchEvents);
