@@ -34,9 +34,16 @@ class AudioManager {
   currentBgmName = null;
   muted = false;
   volume = 1;
-  bgmVolume = 0.6; // Menu background music volume
-  gameBgmVolume = 0.8; // Game background music volume, slightly louder than menu
-  sfxVolume = 0.4; // Sound effects volume (quieter)
+  // Base volume ratios (applied as multipliers of master volume)
+  baseBgmVolume = 0.6; // Menu background music base
+  baseGameBgmVolume = 0.8; // Game background music base
+  baseSfxVolume = 0.4; // Sound effects base
+  bgmVolume = 0.6;
+  gameBgmVolume = 0.8;
+  sfxVolume = 0.4;
+  bgmStartOffsets = {
+    game: 1.95,
+  };
 
   constructor(initialVolume = 1) {
     this.volume = this.clampVolume(initialVolume);
@@ -89,13 +96,39 @@ class AudioManager {
 
     this.stopBackground();
     const src = sources[Math.floor(Math.random() * sources.length)];
-    const audio = new Audio(src);
-    audio.loop = true;
-    audio.volume = name === "game" ? this.gameBgmVolume : this.bgmVolume;
-    audio.muted = this.muted;
+    const audio = this.createBgmAudio(name, src);
     audio.play().catch(() => {});
     this.bgmElement = audio;
     this.currentBgmName = name;
+  }
+
+  /**
+   * Create and configure a background music audio element.
+   * @param {string} name - Background music identifier.
+   * @param {string} src - Audio source path.
+   * @returns {HTMLAudioElement}
+   */
+  createBgmAudio(name, src) {
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    audio.loop = true;
+    audio.volume = name === "game" ? this.gameBgmVolume : this.bgmVolume;
+    audio.muted = this.muted;
+    this.applyBgmStartOffset(audio, name);
+    return audio;
+  }
+
+  /**
+   * Apply a configured start offset for a background music track.
+   * @param {HTMLAudioElement} audio - Audio element.
+   * @param {string} name - Background music identifier.
+   */
+  applyBgmStartOffset(audio, name) {
+    const offset = this.bgmStartOffsets[name] || 0;
+    if (offset <= 0) return;
+    audio.addEventListener("loadedmetadata", () => {
+      if (audio.currentTime < offset) audio.currentTime = offset;
+    });
   }
 
   /**
@@ -105,14 +138,28 @@ class AudioManager {
     if (this.muted) return;
     if (this.runSoundElement && !this.runSoundElement.paused) return;
     if (!this.runSoundSource) return;
-
     this.stopRunSound();
-    this.runSoundElement = new Audio(this.runSoundSource);
-    this.runSoundElement.volume = this.sfxVolume;
-    this.runSoundElement.muted = this.muted;
-    this.runSoundElement.currentTime = 0;
+    this.runSoundElement = this.createRunAudio();
     this.runSoundElement.play().catch(() => {});
+    this.startRunSoundLoop();
+  }
 
+  /**
+   * Create and configure a running sound audio element.
+   * @returns {HTMLAudioElement}
+   */
+  createRunAudio() {
+    const audio = new Audio(this.runSoundSource);
+    audio.volume = this.sfxVolume;
+    audio.muted = this.muted;
+    audio.currentTime = 0;
+    return audio;
+  }
+
+  /**
+   * Start the looping interval for the running sound.
+   */
+  startRunSoundLoop() {
     this.runSoundTimer = setInterval(() => {
       if (!this.runSoundElement) return;
       this.runSoundElement.pause();
@@ -154,23 +201,27 @@ class AudioManager {
    */
   setVolume(volume) {
     const clampedVolume = this.clampVolume(volume);
-    if (this.volume === 0 && clampedVolume > 0) {
-      // First time setting volume from 0, set relative volumes
-      this.bgmVolume = clampedVolume * 0.8;
-      this.sfxVolume = clampedVolume * 0.6;
-    } else if (this.volume > 0) {
-      // Adjust existing volumes proportionally
-      const ratio = clampedVolume / this.volume;
-      this.bgmVolume = Math.min(1, this.bgmVolume * ratio);
-      this.sfxVolume = Math.min(1, this.sfxVolume * ratio);
-    }
+    this.updateVolumeRatios(clampedVolume);
     this.volume = clampedVolume;
-    if (this.bgmElement) {
-      this.bgmElement.volume = this.bgmVolume;
-    }
-    if (this.runSoundElement) {
-      this.runSoundElement.volume = this.sfxVolume;
-    }
+    this.applyVolumeToElements();
+  }
+
+  /**
+   * Calculate and update BGM and SFX volume ratios based on new master volume.
+   * @param {number} clampedVolume - The new master volume (0-1).
+   */
+  updateVolumeRatios(clampedVolume) {
+    this.bgmVolume = clampedVolume * this.baseBgmVolume;
+    this.gameBgmVolume = clampedVolume * this.baseGameBgmVolume;
+    this.sfxVolume = clampedVolume * this.baseSfxVolume;
+  }
+
+  /**
+   * Apply current volume settings to active audio elements.
+   */
+  applyVolumeToElements() {
+    if (this.bgmElement) this.bgmElement.volume = this.bgmVolume;
+    if (this.runSoundElement) this.runSoundElement.volume = this.sfxVolume;
   }
 
   /**
