@@ -13,6 +13,14 @@ class AudioManager {
     gameStart: ["audio/game-start.mp3"],
     gameOver: ["audio/game-over.mp3"],
   };
+
+  bgmSources = {
+    menu: ["audio/background-desert-shimmer.mp3"],
+    game: ["audio/background-gregorquendel-tetris-theme-korobeiniki-arranged-for-piano.mp3"],
+  };
+
+  bgmElement = null;
+  currentBgmName = null;
   muted = false;
   volume = 1;
 
@@ -47,11 +55,49 @@ class AudioManager {
   }
 
   /**
+   * Play a looping background track by name.
+   * @param {string} name - Background music identifier.
+   */
+  playBackground(name) {
+    if (this.currentBgmName === name && this.bgmElement && !this.bgmElement.paused) {
+      return;
+    }
+
+    const sources = this.bgmSources[name];
+    if (!sources?.length) return;
+
+    this.stopBackground();
+    const src = sources[Math.floor(Math.random() * sources.length)];
+    const audio = new Audio(src);
+    audio.loop = true;
+    audio.volume = this.volume;
+    audio.muted = this.muted;
+    audio.play().catch(() => {});
+    this.bgmElement = audio;
+    this.currentBgmName = name;
+  }
+
+  /**
+   * Stop the currently playing background music.
+   */
+  stopBackground() {
+    if (this.bgmElement) {
+      this.bgmElement.pause();
+      this.bgmElement.currentTime = 0;
+      this.bgmElement = null;
+      this.currentBgmName = null;
+    }
+  }
+
+  /**
    * Update the global volume for new playback.
    * @param {number} volume
    */
   setVolume(volume) {
     this.volume = this.clampVolume(volume);
+    if (this.bgmElement) {
+      this.bgmElement.volume = this.volume;
+    }
   }
 
   /**
@@ -61,6 +107,9 @@ class AudioManager {
   setMuted(muted) {
     this.muted = Boolean(muted);
     localStorage.setItem("epl_muted", this.muted);
+    if (this.bgmElement) {
+      this.bgmElement.muted = this.muted;
+    }
   }
 
   /**

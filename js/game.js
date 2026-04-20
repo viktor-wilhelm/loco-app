@@ -10,6 +10,7 @@ function init() {
   if (savedVolume !== null) slider.value = savedVolume;
   window.masterVolume = parseFloat(slider.value);
   audioManager = new AudioManager(window.masterVolume);
+  audioManager.playBackground("menu");
   updateSliderFill(slider);
   slider.addEventListener("input", () => {
     window.masterVolume = parseFloat(slider.value);
@@ -34,6 +35,7 @@ function startGame() {
   document.getElementById("start-screen").style.display = "none";
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard, audioManager);
+  audioManager?.playBackground("game");
   audioManager?.playSound("gameStart");
   setTouchControlsVisible(true);
 }
@@ -110,6 +112,7 @@ function menuGoHome() {
   }
   world = null;
   document.getElementById("start-screen").style.display = "";
+  audioManager?.playBackground("menu");
   setTouchControlsVisible(false);
 }
 
