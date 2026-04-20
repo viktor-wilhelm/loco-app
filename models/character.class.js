@@ -53,6 +53,7 @@ class Character extends MovableObject {
   handleJump() {
     if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
       this.jump();
+      this.world.audioManager?.playSound("jump");
       this.lastMoveTime = Date.now();
     }
   }

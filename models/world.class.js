@@ -24,10 +24,11 @@ class World {
   totalBottles = 0;
   bottleRefillCount = 0;
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, audioManager) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.audioManager = audioManager;
     this.totalCoins = this.level.coins.length;
     this.totalBottles = this.level.bottles.length;
     this.draw();
@@ -93,6 +94,7 @@ class World {
     this.throwableObjects.push(bottle);
     this.bottlesCollected--;
     this.bottleBar.setPercentage(this.calcBottleBarPct());
+    this.audioManager?.playSound("throwBottle");
     if (this.bottlesCollected === 0 && this.level.bottles.length === 0) {
       this.spawnBottleRefill();
     }
@@ -113,6 +115,7 @@ class World {
         } else if (this.canTakeDamage()) {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
+          this.audioManager?.playSound("playerHurt");
         }
       }
     }
@@ -171,8 +174,10 @@ class World {
       enemy.activate();
       enemy.hit();
       this.endbossBar.setPercentage(enemy.energy);
+      this.audioManager?.playSound("enemyHit");
     } else {
       enemy.die();
+      this.audioManager?.playSound("enemyDie");
     }
     bottle.isSplashing = true;
     bottle.playSplash();
@@ -195,6 +200,7 @@ class World {
     this.coinsCollected++;
     const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
     this.coinBar.setPercentage(percentage);
+    this.audioManager?.playSound("coin");
     this.coinHealCounter++;
     if (this.coinHealCounter >= 10 && this.character.energy < 100) {
       this.coinHealCounter = 0;

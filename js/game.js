@@ -1,5 +1,6 @@
 let canvas;
 let world;
+let audioManager;
 let keyboard = new Keyboard();
 
 function init() {
@@ -8,9 +9,12 @@ function init() {
   const savedVolume = localStorage.getItem("masterVolume");
   if (savedVolume !== null) slider.value = savedVolume;
   window.masterVolume = parseFloat(slider.value);
+  audioManager = new AudioManager(window.masterVolume);
+  audioManager.playBackground("menu");
   updateSliderFill(slider);
   slider.addEventListener("input", () => {
     window.masterVolume = parseFloat(slider.value);
+    audioManager.setVolume(window.masterVolume);
     localStorage.setItem("masterVolume", slider.value);
     updateSliderFill(slider);
   });
@@ -30,7 +34,9 @@ function startGame() {
   level1 = createLevel1();
   document.getElementById("start-screen").style.display = "none";
   canvas = document.getElementById("canvas");
-  world = new World(canvas, keyboard);
+  world = new World(canvas, keyboard, audioManager);
+  audioManager?.playBackground("game");
+  audioManager?.playSound("gameStart");
   setTouchControlsVisible(true);
 }
 
@@ -40,11 +46,23 @@ function syncMenuSlider() {
   updateSliderFill(menuSlider);
   menuSlider.addEventListener("input", () => {
     window.masterVolume = parseFloat(menuSlider.value);
+    audioManager?.setVolume(window.masterVolume);
     localStorage.setItem("masterVolume", menuSlider.value);
     updateSliderFill(menuSlider);
     document.getElementById("volume-slider").value = menuSlider.value;
     updateSliderFill(document.getElementById("volume-slider"));
   });
+}
+
+function updateMuteButton() {
+  const muteBtn = document.getElementById("menu-mute-btn");
+  if (!muteBtn || !audioManager) return;
+  muteBtn.textContent = audioManager.muted ? "Unmute" : "Mute";
+}
+
+function toggleMute() {
+  audioManager?.toggleMute();
+  updateMuteButton();
 }
 
 function updatePrimaryMenuBtn() {
@@ -62,6 +80,7 @@ function openMenu() {
   if (world) world.paused = true;
   setTouchControlsVisible(false);
   syncMenuSlider();
+  updateMuteButton();
   updatePrimaryMenuBtn();
   document.getElementById("menu-popup").removeAttribute("hidden");
 }
@@ -93,20 +112,13 @@ function menuGoHome() {
   }
   world = null;
   document.getElementById("start-screen").style.display = "";
+  audioManager?.playBackground("menu");
   setTouchControlsVisible(false);
 }
 
 function menuShowControls() {
   loadOverlay("templates/menu-controls.html");
   closeMenu();
-}
-function toggleFullscreen() {
-  const container = document.getElementById("game-container");
-  if (!document.fullscreenElement) {
-    container.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
 }
 
 function handleKey(e, isPressed) {
