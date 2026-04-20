@@ -7,7 +7,7 @@
  * Toggle fullscreen mode for the game container.
  */
 function toggleFullscreen() {
-  const container = document.getElementById("game-container");
+  const container = document.querySelector(".game-container");
   if (!document.fullscreenElement) {
     container.requestFullscreen();
   } else {

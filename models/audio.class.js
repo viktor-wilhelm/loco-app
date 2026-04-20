@@ -34,8 +34,8 @@ class AudioManager {
   currentBgmName = null;
   muted = false;
   volume = 1;
-  bgmVolume = 0.2; // Background music volume (louder)
-  sfxVolume = 0.05; // Sound effects volume (quieter)
+  bgmVolume = 0.6; // Background music volume (louder)
+  sfxVolume = 0.4; // Sound effects volume (quieter)
 
   constructor(initialVolume = 1) {
     this.volume = this.clampVolume(initialVolume);
