@@ -217,14 +217,14 @@
   background: rgba(245, 197, 24, 1);
 }
 
-@media (max-width: 1025px) {
+@media (pointer: coarse) {
   .game__touch-controls--active {
     display: flex;
   }
 }
 
-@media (max-width: 670px) and (orientation: portrait) {
+@media (pointer: coarse) and (max-width: 670px) and (orientation: portrait) {
   .game__touch-controls {
-    display: none;
+    display: none !important;
   }
 }

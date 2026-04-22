@@ -48,19 +48,3 @@ function hideOverlay() {
   if (overlayReturnTo === "menu") openMenu();
   overlayReturnTo = null;
 }
-
-/**
- * Opens the in-game menu popup.
- * @returns {void}
- */
-function openMenu() {
-  document.getElementById("menu-popup").removeAttribute("hidden");
-}
-
-/**
- * Closes the in-game menu popup.
- * @returns {void}
- */
-function closeMenu() {
-  document.getElementById("menu-popup").setAttribute("hidden", "");
-}
