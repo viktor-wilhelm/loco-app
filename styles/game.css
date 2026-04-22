@@ -228,3 +228,52 @@
     display: none !important;
   }
 }
+
+/* ======================
+   End Screen
+   ====================== */
+
+.game__end-screen {
+  position: absolute;
+  bottom: 14%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.game__end-screen[hidden] {
+  display: none;
+}
+
+.game__end-btn {
+  pointer-events: auto;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition:
+    transform 0.1s,
+    opacity 0.1s;
+}
+
+.game__end-btn:hover {
+  transform: scale(1.05);
+}
+
+.game__end-btn--primary {
+  background: #f5c518;
+  color: #1a0a00;
+}
+
+.game__end-btn--secondary {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}

@@ -146,7 +146,23 @@ function menuStartGame() {
 /**
  * Return to the home screen and reset the current game.
  */
+/**
+ * Shows the end-screen buttons after game over or win.
+ */
+function showEndScreen() {
+  document.getElementById("end-screen").removeAttribute("hidden");
+}
+
+/**
+ * Hides the end screen, then starts a new game.
+ */
+function endScreenStartGame() {
+  document.getElementById("end-screen").setAttribute("hidden", "");
+  startGame();
+}
+
 function menuGoHome() {
+  document.getElementById("end-screen").setAttribute("hidden", "");
   closeMenu();
   clearAllIntervals();
   if (world) {

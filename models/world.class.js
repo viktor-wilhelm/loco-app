@@ -367,7 +367,7 @@ class World {
           next();
         }, delays[step]);
       } else {
-        setStoppableTimeout(() => menuGoHome(), 2500);
+        setStoppableTimeout(() => showEndScreen(), 1500);
       }
     };
     next();
