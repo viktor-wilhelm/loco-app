@@ -1,6 +1,7 @@
 /**
- * @fileoverview Audio management for El Pollo Loco.
- * @description Manages effect playback, volume and mute state.
+ * Manages all audio playback including sound effects, background music,
+ * running sounds, volume control, and mute state persistence.
+ * @class AudioManager
  */
 class AudioManager {
   soundSources = {
@@ -45,6 +46,10 @@ class AudioManager {
     game: 1.95,
   };
 
+  /**
+   * Creates a new AudioManager and restores the mute state from localStorage.
+   * @param {number} [initialVolume=1] - Master volume between 0 and 1.
+   */
   constructor(initialVolume = 1) {
     this.volume = this.clampVolume(initialVolume);
     this.muted = localStorage.getItem("epl_muted") === "true";
@@ -243,6 +248,11 @@ class AudioManager {
     this.setMuted(!this.muted);
   }
 
+  /**
+   * Clamps a volume value to the valid range [0, 1].
+   * @param {number} volume - The raw volume value.
+   * @returns {number} A value between 0 and 1.
+   */
   clampVolume(volume) {
     return Math.max(0, Math.min(1, parseFloat(volume) || 0));
   }
