@@ -131,7 +131,6 @@ function closeMenu() {
       world.character.resumeInvincible = false;
     }, 1000);
     world.paused = false;
-    world.draw();
     setTouchControlsVisible(true);
   }
 }

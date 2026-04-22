@@ -1,3 +1,8 @@
+/**
+ * Represents the final boss enemy with attack patterns, animation, and health logic.
+ * @class Endboss
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
   height = 340;
   width = 225;
@@ -14,6 +19,9 @@ class Endboss extends MovableObject {
   static GROUND_Y = -110;
   offset = { top: 60, bottom: 20, left: 30, right: 30 };
 
+  /**
+   * Creates a new Endboss instance and loads all animation images.
+   */
   constructor() {
     super().loadImage(IMAGES_ENDBOSS_WALK[0]);
     this.loadImages(IMAGES_ENDBOSS_WALKING);
@@ -25,11 +33,18 @@ class Endboss extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Checks if the endboss is within close range of the player.
+   * @returns {boolean}
+   */
   isNearPepe() {
     if (!this.world) return false;
     return Math.abs(this.x - this.world.character.x) < 100;
   }
 
+  /**
+   * Activates the endboss, triggers size increase and jump attack loop.
+   */
   activate() {
     if (this.activated) return;
     this.activated = true;
@@ -40,10 +55,17 @@ class Endboss extends MovableObject {
     this.startJumpAttackLoop();
   }
 
+  /**
+   * Checks if the endboss is above ground level.
+   * @returns {boolean}
+   */
   isAboveGround() {
     return this.y < Endboss.GROUND_Y;
   }
 
+  /**
+   * Starts the interval loop that triggers jump attacks towards the player.
+   */
   startJumpAttackLoop() {
     setStoppableInterval(() => {
       if (this.world && this.world.paused) return;
@@ -53,6 +75,9 @@ class Endboss extends MovableObject {
     }, 5000);
   }
 
+  /**
+   * Initiates a jump attack towards the player.
+   */
   jumpTowardsPepe() {
     if (!this.world) return;
     this.isJumping = true;
@@ -61,6 +86,10 @@ class Endboss extends MovableObject {
     this.startJumpMoveInterval(direction);
   }
 
+  /**
+   * Starts the horizontal movement during a jump attack.
+   * @param {number} direction - Movement direction (-1 left, 1 right)
+   */
   startJumpMoveInterval(direction) {
     const jumpMove = setStoppableInterval(() => {
       if (this.world && this.world.paused) return;
@@ -76,6 +105,9 @@ class Endboss extends MovableObject {
     }, 800);
   }
 
+  /**
+   * Reduces endboss energy on hit and triggers death or hurt state.
+   */
   hit() {
     this.energy -= 10;
     this.hitCount++;
@@ -87,12 +119,18 @@ class Endboss extends MovableObject {
     }
   }
 
+  /**
+   * Handles hurt state: plays sound and spawns chickens.
+   */
   handleHurt() {
     this.showHurt();
     this.world.audioManager?.playSound("endbossHurt", 3000);
     if (this.world) this.spawnChickens();
   }
 
+  /**
+   * Spawns BossChicken enemies near the endboss when hit.
+   */
   spawnChickens() {
     const spawnX = this.x + this.width / 2 - 35;
     const spawnY = this.y + this.height * 0.55;
@@ -103,6 +141,9 @@ class Endboss extends MovableObject {
     }
   }
 
+  /**
+   * Briefly sets the hurt state and resets it after a timeout.
+   */
   showHurt() {
     this.isHurt = true;
     setStoppableTimeout(() => {
@@ -110,6 +151,9 @@ class Endboss extends MovableObject {
     }, 500);
   }
 
+  /**
+   * Kills the endboss and triggers the game won screen.
+   */
   die() {
     this.isDead = true;
     this.speed = 0;
@@ -120,6 +164,9 @@ class Endboss extends MovableObject {
     }, 1500);
   }
 
+  /**
+   * Starts all movement and animation intervals for the endboss.
+   */
   animate() {
     setStoppableInterval(() => {
       if (this.world && this.world.paused) return;
@@ -133,6 +180,9 @@ class Endboss extends MovableObject {
     }, 100);
   }
 
+  /**
+   * Plays the correct animation based on the current boss state.
+   */
   handleBossAnimation() {
     if (this.isDead) {
       this.playAnimation(IMAGES_ENDBOSS_DEAD);

@@ -1,3 +1,9 @@
+/**
+ * Represents the player character Pepe.
+ * Handles movement, animation states, and death logic.
+ * @class Character
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
   width = 95;
   height = 220;
@@ -9,6 +15,9 @@ class Character extends MovableObject {
   lastMoveTime = Date.now();
   deathAnimationDone = false;
 
+  /**
+   * Creates a new Character instance, loads all animation images and starts gravity.
+   */
   constructor() {
     super().loadImage(IMAGES_CHARACTER_IDLE[0]);
     this.loadImages(IMAGES_CHARACTER_IDLE);
@@ -21,6 +30,11 @@ class Character extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Checks if the character is jumping on top of an enemy.
+   * @param {object} enemy - The enemy to check
+   * @returns {boolean}
+   */
   isJumpingOn(enemy) {
     const isFalling = this.speedY < 0 || (this.speedY === 0 && this.isAboveGround());
     const pepeFootAboveEnemyBottom =
@@ -28,12 +42,18 @@ class Character extends MovableObject {
     return isFalling && pepeFootAboveEnemyBottom;
   }
 
+  /**
+   * Handles all movement inputs (right, left, jump).
+   */
   handleMovement() {
     this.handleMoveRight();
     this.handleMoveLeft();
     this.handleJump();
   }
 
+  /**
+   * Moves the character to the right if RIGHT key is pressed.
+   */
   handleMoveRight() {
     if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
       this.moveRight();
@@ -42,6 +62,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Moves the character to the left if LEFT key is pressed.
+   */
   handleMoveLeft() {
     if (this.world.keyboard.LEFT && this.x > 120) {
       this.moveLeft();
@@ -50,6 +73,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Makes the character jump if UP or SPACE is pressed and on the ground.
+   */
   handleJump() {
     if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
       this.jump();
@@ -58,6 +84,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Starts movement and animation intervals for the character.
+   */
   animate() {
     setStoppableInterval(() => {
       if (this.world.paused || this.isDead() || this.world.gameWon) return;
@@ -75,6 +104,9 @@ class Character extends MovableObject {
     }, 100);
   }
 
+  /**
+   * Plays the death animation and triggers game over when done.
+   */
   handleDeathAnimation() {
     if (this.deathAnimationDone) return;
     this.world.audioManager?.stopRunSound();
@@ -86,6 +118,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Plays the appropriate animation based on the current character state.
+   */
   handleStateAnimation() {
     if (this.isHurt()) {
       this.world.audioManager?.stopRunSound();
@@ -102,6 +137,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Plays idle or sleep animation depending on inactivity duration.
+   */
   playIdleAnimation() {
     const idleSeconds = (Date.now() - this.lastMoveTime) / 1000;
     this.playAnimation(idleSeconds > 5 ? IMAGES_CHARACTER_SLEEP : IMAGES_CHARACTER_IDLE);

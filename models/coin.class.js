@@ -1,11 +1,17 @@
+/**
+ * Represents a collectible coin with a spinning animation.
+ * @class Coin
+ * @extends DrawableObject
+ */
 class Coin extends DrawableObject {
   width = 110;
   height = 110;
   currentImage = 0;
 
   /**
-   * @param {number} x - X-Position der Münze
-   * @param {number} y - Y-Position der Münze
+   * Creates a new Coin instance.
+   * @param {number} x - X position of the coin
+   * @param {number} y - Y position of the coin
    */
   constructor(x, y) {
     super();
@@ -16,6 +22,9 @@ class Coin extends DrawableObject {
     this.animate();
   }
 
+  /**
+   * Starts the coin spin animation interval.
+   */
   animate() {
     setStoppableInterval(() => {
       this.currentImage = (this.currentImage + 1) % IMAGES_COIN_SPIN.length;

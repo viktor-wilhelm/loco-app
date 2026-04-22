@@ -64,14 +64,6 @@ class World {
   }
 
   /**
-   * Sets the world reference for the endboss.
-   */
-  setEndbossWorld() {
-    const boss = this.level.enemies.find((e) => e instanceof Endboss);
-    if (boss) boss.world = this;
-  }
-
-  /**
    * Starts the main game intervals (game loop).
    */
   run() {
@@ -200,10 +192,24 @@ class World {
     enemy.hit();
     enemy.hit();
     this.endbossBar.setPercentage(enemy.energy);
-    this.character.speedY = 30;
+    this.character.speedY = 35;
+    this.startEndbossKnockback();
     setStoppableTimeout(() => {
       this.activeEnemyInteraction = false;
     }, 800);
+  }
+
+  /**
+   * Pushes Pepe horizontally away from the endboss after a jump hit.
+   * Runs for a short duration to simulate a knockback effect.
+   */
+  startEndbossKnockback() {
+    let ticks = 0;
+    const knockback = setStoppableInterval(() => {
+      this.character.x -= 54;
+      ticks++;
+      if (ticks >= 10) clearInterval(knockback);
+    }, 25);
   }
 
   /**
@@ -257,10 +263,23 @@ class World {
    */
   checkCoinCollisions() {
     if (this.coinsCollected >= this.totalCoins) return;
+    const MARGIN = 18;
+    // Returns true if the character's (tightened) hitbox overlaps with the coin
+    const isCoinHitboxOverlap = (char, coin) => {
+      const left = char.x + char.offset.left + MARGIN;
+      const right = char.x + char.width - char.offset.right - MARGIN;
+      const top = char.y + char.offset.top + MARGIN;
+      const bottom = char.y + char.height - char.offset.bottom - MARGIN;
+      const coinLeft = coin.x + coin.offset.left + MARGIN;
+      const coinRight = coin.x + coin.width - coin.offset.right - MARGIN;
+      const coinTop = coin.y + coin.offset.top + MARGIN;
+      const coinBottom = coin.y + coin.height - coin.offset.bottom - MARGIN;
+      return right > coinLeft && bottom > coinTop && left < coinRight && top < coinBottom;
+    };
     this.level.coins = this.level.coins.filter((coin) => {
       const isAirCoin = coin.y < 300;
       const canCollect = !isAirCoin || this.character.isAboveGround();
-      if (canCollect && this.character.isColliding(coin)) {
+      if (canCollect && isCoinHitboxOverlap(this.character, coin)) {
         this.collectCoin();
         return false;
       }

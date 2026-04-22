@@ -1,3 +1,8 @@
+/**
+ * Represents a normal chicken enemy that walks towards the player.
+ * @class Chicken
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
   height = 70;
   width = 70;
@@ -7,6 +12,11 @@ class Chicken extends MovableObject {
   isDead = false;
 
   currentImage = 0;
+
+  /**
+   * Creates a new Chicken instance at a random position.
+   * @param {number} [minX=1000] - Minimum X position for spawning
+   */
   constructor(minX = 1000) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
@@ -17,6 +27,9 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Kills the chicken and schedules its removal.
+   */
   die() {
     this.isDead = true;
     this.loadImage(IMAGE_CHICKEN_DEAD);
@@ -26,6 +39,9 @@ class Chicken extends MovableObject {
     }, 1000);
   }
 
+  /**
+   * Starts the movement and animation intervals for the chicken.
+   */
   animate() {
     const walkInterval = setStoppableInterval(() => {
       if (this.world && this.world.paused) return;

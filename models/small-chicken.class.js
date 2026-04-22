@@ -1,3 +1,8 @@
+/**
+ * Represents a small chicken enemy that walks towards the player.
+ * @class SmallChicken
+ * @extends MovableObject
+ */
 class SmallChicken extends MovableObject {
   height = 45;
   width = 45;
@@ -8,6 +13,10 @@ class SmallChicken extends MovableObject {
 
   currentImage = 0;
 
+  /**
+   * Creates a new SmallChicken instance at a random position.
+   * @param {number} [minX=1000] - Minimum X position for spawning
+   */
   constructor(minX = 1000) {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
@@ -16,6 +25,9 @@ class SmallChicken extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Kills the small chicken and schedules its removal.
+   */
   die() {
     this.isDead = true;
     this.loadImage(IMAGE_SMALL_CHICKEN_DEAD);
@@ -25,6 +37,9 @@ class SmallChicken extends MovableObject {
     }, 1000);
   }
 
+  /**
+   * Starts the movement and animation intervals for the small chicken.
+   */
   animate() {
     setStoppableInterval(() => {
       if (this.world && this.world.paused) return;

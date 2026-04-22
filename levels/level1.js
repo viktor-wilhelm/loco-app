@@ -1,7 +1,17 @@
+/**
+ * Creates an array of objects using a factory function.
+ * @param {number} count - Number of objects to create
+ * @param {function} factory - Factory function
+ * @returns {Array}
+ */
 function createObjects(count, factory) {
   return Array.from({ length: count }, factory);
 }
 
+/**
+ * Creates all background layers for the level with parallax effect.
+ * @returns {BackgroundObject[]}
+ */
 function createBackgrounds() {
   const backgrounds = [];
   const layers = [
@@ -21,6 +31,10 @@ function createBackgrounds() {
   return backgrounds;
 }
 
+/**
+ * Creates all coin objects for the level.
+ * @returns {Coin[]}
+ */
 function createCoins() {
   const coins = [];
   const startX = 400;
@@ -36,6 +50,11 @@ function createCoins() {
   return coins;
 }
 
+/**
+ * Creates all bottle pickup objects for the level.
+ * @param {number} [count=20] - Number of bottles
+ * @returns {BottlePickup[]}
+ */
 function createBottles(count = 20) {
   const bottles = [];
   const MIN_DISTANCE = 200;
@@ -52,6 +71,11 @@ function createBottles(count = 20) {
   return bottles;
 }
 
+/**
+ * Creates all enemy objects for the level.
+ * @param {number} [minX=1000] - Minimum X position for enemies
+ * @returns {Array} Array of Chicken, SmallChicken, and Endboss
+ */
 function createEnemies(minX = 1000) {
   return [
     ...createObjects(8, () => new Chicken(minX)),
@@ -60,6 +84,10 @@ function createEnemies(minX = 1000) {
   ];
 }
 
+/**
+ * Creates the Level 1 instance with all objects.
+ * @returns {Level}
+ */
 function createLevel1() {
   return new Level(
     [],
@@ -70,4 +98,8 @@ function createLevel1() {
   );
 }
 
+/**
+ * The Level 1 instance used by the game.
+ * @type {Level}
+ */
 let level1 = createLevel1();

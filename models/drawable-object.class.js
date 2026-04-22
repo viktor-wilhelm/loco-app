@@ -1,3 +1,8 @@
+/**
+ * Base class for all drawable game objects.
+ * Provides image loading, caching, and drawing functionality.
+ * @class DrawableObject
+ */
 class DrawableObject {
   img;
   imageCache = {};
@@ -8,12 +13,19 @@ class DrawableObject {
   width = 100;
   offset = { top: 0, bottom: 0, left: 0, right: 0 };
 
-  // ladImage('img/test.png');
+  /**
+   * Loads a single image from the given path.
+   * @param {string} path - Path to the image file
+   */
   loadImage(path) {
-    this.img = new Image(); // this.img = document.getElementById('image') <img id="image" src>
+    this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+   * Draws the current image on the canvas.
+   * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+   */
   draw(ctx) {
     if (this.img && this.img.complete && this.img.naturalWidth > 0) {
       ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -21,8 +33,8 @@ class DrawableObject {
   }
 
   /**
-   *
-   * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...]
+   * Loads multiple images into the image cache.
+   * @param {string[]} arr - Array of image paths to preload
    */
   loadImages(arr) {
     arr.forEach((path) => {

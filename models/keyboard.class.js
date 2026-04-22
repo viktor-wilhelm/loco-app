@@ -1,3 +1,8 @@
+/**
+ * Tracks the current state of keyboard inputs for the game.
+ * Each property reflects whether the corresponding key is currently pressed.
+ * @class Keyboard
+ */
 class Keyboard {
   LEFT = false;
   RIGHT = false;
