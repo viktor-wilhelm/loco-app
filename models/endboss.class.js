@@ -169,9 +169,15 @@ class Endboss extends MovableObject {
    */
   animate() {
     setStoppableInterval(() => {
-      if (this.world && this.world.paused) return;
+      if (!this.world || this.world.paused) return;
       if (this.isDead) return;
-      this.moveLeft();
+      const facingRight = this.world.character.x > this.x;
+      this.otherDirection = facingRight;
+      if (facingRight) {
+        this.x += this.speed;
+      } else {
+        this.moveLeft();
+      }
     }, 30);
 
     setStoppableInterval(() => {

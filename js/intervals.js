@@ -43,6 +43,15 @@ function setStoppableTimeout(fn, time) {
 }
 
 /**
+ * Clears all registered intervals (but NOT timeouts), then resets the interval registry.
+ * Use this when active timeouts (e.g. overlay sequences) must continue.
+ */
+function clearIntervalIdsOnly() {
+  intervalIds.forEach((id) => clearInterval(id));
+  intervalIds = [];
+}
+
+/**
  * Clears all registered intervals and timeouts, then resets both registries.
  */
 function clearAllIntervals() {

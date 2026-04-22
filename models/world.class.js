@@ -7,6 +7,10 @@ class World {
    * @type {WorldRenderer}
    */
   renderer;
+  /**
+   * @type {WorldItemCollector}
+   */
+  collector;
   character = new Character();
   level = level1;
   canvas;
@@ -46,6 +50,7 @@ class World {
     this.totalCoins = this.level.coins.length;
     this.totalBottles = this.level.bottles.length;
     this.renderer = new WorldRenderer(this);
+    this.collector = new WorldItemCollector(this);
     this.renderer.draw();
     this.setWorld();
     this.run();
@@ -70,8 +75,8 @@ class World {
     setStoppableInterval(() => {
       if (this.gameOver || this.gameWon || this.paused) return;
       this.checkThrowObjects();
-      this.checkCoinCollisions();
-      this.checkBottleCollisions();
+      this.collector.checkCoinCollisions();
+      this.collector.checkBottleCollisions();
     }, 200);
 
     setStoppableInterval(() => {
@@ -124,7 +129,7 @@ class World {
     };
     this.throwableObjects.push(bottle);
     this.bottlesCollected--;
-    this.bottleBar.setPercentage(this.calcBottleBarPct());
+    this.bottleBar.setPercentage(this.collector.calcBottleBarPct());
     if (this.bottlesCollected === 0 && this.level.bottles.length === 0) {
       this.spawnBottleRefill();
     }
@@ -259,100 +264,6 @@ class World {
   }
 
   /**
-   * Checks if coins are collected.
-   */
-  checkCoinCollisions() {
-    if (this.coinsCollected >= this.totalCoins) return;
-    const MARGIN = 18;
-    // Returns true if the character's (tightened) hitbox overlaps with the coin
-    const isCoinHitboxOverlap = (char, coin) => {
-      const left = char.x + char.offset.left + MARGIN;
-      const right = char.x + char.width - char.offset.right - MARGIN;
-      const top = char.y + char.offset.top + MARGIN;
-      const bottom = char.y + char.height - char.offset.bottom - MARGIN;
-      const coinLeft = coin.x + coin.offset.left + MARGIN;
-      const coinRight = coin.x + coin.width - coin.offset.right - MARGIN;
-      const coinTop = coin.y + coin.offset.top + MARGIN;
-      const coinBottom = coin.y + coin.height - coin.offset.bottom - MARGIN;
-      return right > coinLeft && bottom > coinTop && left < coinRight && top < coinBottom;
-    };
-    this.level.coins = this.level.coins.filter((coin) => {
-      const isAirCoin = coin.y < 300;
-      const canCollect = !isAirCoin || this.character.isAboveGround();
-      if (canCollect && isCoinHitboxOverlap(this.character, coin)) {
-        this.collectCoin();
-        return false;
-      }
-      return true;
-    });
-  }
-
-  /**
-   * Collects a coin and updates the display.
-   */
-  collectCoin() {
-    this.coinsCollected++;
-    const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
-    this.coinBar.setPercentage(percentage);
-    this.audioManager?.playSound("coin");
-    this.coinHealCounter++;
-    if (this.coinHealCounter >= 10 && this.character.energy < 100) {
-      this.coinHealCounter = 0;
-      this.character.heal(100);
-      this.statusBar.setPercentage(this.character.energy);
-    }
-  }
-
-  /**
-   * Checks if bottles are collected.
-   */
-  checkBottleCollisions() {
-    if (this.bottlesCollected >= 10) return;
-    this.level.bottles = this.level.bottles.filter((bottle) => {
-      if (this.isBottleHittingCharacter(bottle)) {
-        this.collectBottle();
-        return false;
-      }
-      return true;
-    });
-  }
-
-  /**
-   * Checks if a bottle hits the character.
-   * @param {object} bottle - The bottle
-   * @returns {boolean} true if hit
-   */
-  isBottleHittingCharacter(bottle) {
-    const c = this.character;
-    const centerX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
-    const bottom = c.y + c.height - c.offset.bottom;
-    const midY = c.y + c.height / 2;
-    const bLeft = bottle.x + bottle.offset.left;
-    const bRight = bottle.x + bottle.width - bottle.offset.right;
-    const bTop = bottle.y + bottle.offset.top;
-    const bBottom = bottle.y + bottle.height - bottle.offset.bottom;
-    return centerX > bLeft && centerX < bRight && bottom > bTop && midY < bBottom;
-  }
-
-  /**
-   * Calculates the percentage for the bottle bar.
-   * @returns {number} Percentage (0-100)
-   */
-  calcBottleBarPct() {
-    if (this.bottlesCollected === 0) return 0;
-    return Math.min(100, Math.ceil((this.bottlesCollected / 10) * 5) * 20);
-  }
-
-  /**
-   * Collects a bottle and updates the display.
-   */
-  collectBottle() {
-    this.bottlesCollected++;
-    this.bottleBar.setPercentage(this.calcBottleBarPct());
-    this.audioManager?.playSound("bottlePickup");
-  }
-
-  /**
    * Starts an image sequence for overlays.
    * @param {number[]} delays - Delays per step
    * @param {function(number):void} onStep - Callback per step
@@ -374,10 +285,21 @@ class World {
   }
 
   /**
+   * Stops all game intervals and audio. Keeps the render loop and
+   * pending timeouts (overlay sequence) alive.
+   */
+  stopGame() {
+    clearIntervalIdsOnly();
+    this.audioManager?.stopBackground();
+    this.audioManager?.stopRunSound();
+  }
+
+  /**
    * Shows the win screen and starts the sequence.
    */
   showGameWon() {
     this.gameWon = true;
+    this.stopGame();
     this.audioManager?.playSound("gameWon");
     document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameWonStep = 0;
@@ -389,6 +311,7 @@ class World {
    */
   showGameOver() {
     this.gameOver = true;
+    this.stopGame();
     this.audioManager?.playSound("gameOver");
     document.getElementById("touch-controls").classList.remove("game__touch-controls--active");
     this.gameOverStep = 0;
