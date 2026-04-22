@@ -1,4 +1,12 @@
+/**
+ * Main game class for El Pollo Loco. Manages game logic, rendering, and collisions.
+ * @class World
+ */
 class World {
+  /**
+   * @type {WorldRenderer}
+   */
+  renderer;
   character = new Character();
   level = level1;
   canvas;
@@ -24,6 +32,12 @@ class World {
   totalBottles = 0;
   bottleRefillCount = 0;
 
+  /**
+   * Creates a new World instance.
+   * @param {HTMLCanvasElement} canvas - The canvas element for rendering.
+   * @param {Keyboard} keyboard - Keyboard handler for input.
+   * @param {object} audioManager - Audio manager for sounds.
+   */
   constructor(canvas, keyboard, audioManager) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -31,7 +45,8 @@ class World {
     this.audioManager = audioManager;
     this.totalCoins = this.level.coins.length;
     this.totalBottles = this.level.bottles.length;
-    this.draw();
+    this.renderer = new WorldRenderer(this);
+    this.renderer.draw();
     this.setWorld();
     this.run();
     setStoppableTimeout(() => {
@@ -40,16 +55,25 @@ class World {
     }, 3000);
   }
 
+  /**
+   * Links world reference to character and enemies.
+   */
   setWorld() {
     this.character.world = this;
     this.level.enemies.forEach((e) => (e.world = this));
   }
 
+  /**
+   * Sets the world reference for the endboss.
+   */
   setEndbossWorld() {
     const boss = this.level.enemies.find((e) => e instanceof Endboss);
     if (boss) boss.world = this;
   }
 
+  /**
+   * Starts the main game intervals (game loop).
+   */
   run() {
     setStoppableInterval(() => {
       if (this.gameOver || this.gameWon || this.paused) return;
@@ -67,6 +91,9 @@ class World {
     }, 50);
   }
 
+  /**
+   * Checks if new enemies need to be spawned.
+   */
   checkEnemyRespawn() {
     const hasChickens = this.level.enemies.some(
       (e) => (e instanceof Chicken || e instanceof SmallChicken) && !e.isDead,
@@ -74,12 +101,18 @@ class World {
     if (!hasChickens) this.spawnChickenWave();
   }
 
+  /**
+   * Spawns a new wave of enemies (without endboss).
+   */
   spawnChickenWave() {
     const newEnemies = createEnemies(this.character.x + 800).filter((e) => !(e instanceof Endboss));
     newEnemies.forEach((e) => (e.world = this));
     this.level.enemies.push(...newEnemies);
   }
 
+  /**
+   * Checks if a bottle should be thrown.
+   */
   checkThrowObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
     if (!this.keyboard.THROW_PENDING) return;
@@ -87,6 +120,9 @@ class World {
     if (this.bottlesCollected > 0) this.throwBottle();
   }
 
+  /**
+   * Throws a bottle and removes it from inventory.
+   */
   throwBottle() {
     const facingLeft = this.character.otherDirection;
     const offsetX = facingLeft ? -10 : 40;
@@ -102,12 +138,18 @@ class World {
     }
   }
 
+  /**
+   * Refills bottles if none are left.
+   */
   spawnBottleRefill() {
     if (this.bottleRefillCount >= 1) return;
     this.bottleRefillCount++;
     this.level.bottles = createBottles(10);
   }
 
+  /**
+   * Checks collisions between character and enemies.
+   */
   checkCollisions() {
     for (const enemy of this.level.enemies) {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
@@ -123,6 +165,10 @@ class World {
     }
   }
 
+  /**
+   * Checks if the character can take damage.
+   * @returns {boolean} true if damage is possible
+   */
   canTakeDamage() {
     return (
       !this.activeEnemyInteraction &&
@@ -132,6 +178,10 @@ class World {
     );
   }
 
+  /**
+   * Handles jumping on an enemy.
+   * @param {object} enemy - The enemy object hit
+   */
   handleJumpOnEnemy(enemy) {
     this.activeEnemyInteraction = true;
     if (enemy instanceof Endboss) {
@@ -141,6 +191,10 @@ class World {
     }
   }
 
+  /**
+   * Handles jumping on the endboss.
+   * @param {Endboss} enemy - The endboss
+   */
   handleJumpOnEndboss(enemy) {
     enemy.activate();
     enemy.hit();
@@ -152,6 +206,10 @@ class World {
     }, 800);
   }
 
+  /**
+   * Handles jumping on a chicken.
+   * @param {Chicken|SmallChicken} enemy - The chicken
+   */
   handleJumpOnChicken(enemy) {
     enemy.die();
     this.audioManager?.playSound(enemy instanceof SmallChicken ? "smallChickenDie" : "enemyDie", 1000);
@@ -161,6 +219,9 @@ class World {
     }, 100);
   }
 
+  /**
+   * Checks if thrown bottles hit enemies.
+   */
   checkBottleHitsEnemy() {
     this.throwableObjects.forEach((bottle) => {
       if (bottle.isSplashing) return;
@@ -172,6 +233,11 @@ class World {
     });
   }
 
+  /**
+   * Applies bottle hit to an enemy.
+   * @param {ThrowableObject} bottle - The bottle
+   * @param {object} enemy - The enemy object hit
+   */
   applyBottleHit(bottle, enemy) {
     if (enemy instanceof Endboss) {
       enemy.activate();
@@ -186,6 +252,9 @@ class World {
     bottle.playSplash();
   }
 
+  /**
+   * Checks if coins are collected.
+   */
   checkCoinCollisions() {
     if (this.coinsCollected >= this.totalCoins) return;
     this.level.coins = this.level.coins.filter((coin) => {
@@ -199,6 +268,9 @@ class World {
     });
   }
 
+  /**
+   * Collects a coin and updates the display.
+   */
   collectCoin() {
     this.coinsCollected++;
     const percentage = Math.round((this.coinsCollected / this.totalCoins) * 100);
@@ -212,6 +284,9 @@ class World {
     }
   }
 
+  /**
+   * Checks if bottles are collected.
+   */
   checkBottleCollisions() {
     if (this.bottlesCollected >= 10) return;
     this.level.bottles = this.level.bottles.filter((bottle) => {
@@ -223,6 +298,11 @@ class World {
     });
   }
 
+  /**
+   * Checks if a bottle hits the character.
+   * @param {object} bottle - The bottle
+   * @returns {boolean} true if hit
+   */
   isBottleHittingCharacter(bottle) {
     const c = this.character;
     const centerX = c.x + c.offset.left + (c.width - c.offset.left - c.offset.right) / 2;
@@ -235,108 +315,28 @@ class World {
     return centerX > bLeft && centerX < bRight && bottom > bTop && midY < bBottom;
   }
 
+  /**
+   * Calculates the percentage for the bottle bar.
+   * @returns {number} Percentage (0-100)
+   */
   calcBottleBarPct() {
     if (this.bottlesCollected === 0) return 0;
     return Math.min(100, Math.ceil((this.bottlesCollected / 10) * 5) * 20);
   }
 
+  /**
+   * Collects a bottle and updates the display.
+   */
   collectBottle() {
     this.bottlesCollected++;
     this.bottleBar.setPercentage(this.calcBottleBarPct());
     this.audioManager?.playSound("bottlePickup");
   }
 
-  draw() {
-    this.drawBackground();
-    this.drawHUD();
-    this.drawWorld();
-    this.drawOverlay(this.gameOver, this.gameOverImages, this.gameOverStep);
-    this.drawOverlay(this.gameWon, this.gameWonImages, this.gameWonStep);
-    requestAnimationFrame(() => {
-      if (!this.paused) this.draw();
-    });
-  }
-
-  drawBackground() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = "#5dbde0";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.addBackgroundObjectsParallax(this.level.backgroundObjects);
-    this.addBackgroundObjectsParallax(this.level.clouds);
-  }
-
-  drawHUD() {
-    this.addToMap(this.statusBar);
-    this.addToMap(this.coinBar);
-    this.addToMap(this.bottleBar);
-    this.addToMap(this.endbossBar);
-  }
-
-  drawWorld() {
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addToMap(this.character);
-    this.ctx.translate(-this.camera_x, 0);
-  }
-
-  drawOverlay(active, images, step) {
-    if (!active || step < 0 || !images[step]) return;
-    this.ctx.fillStyle = "rgba(0,0,0,0.55)";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    const img = images[step];
-    const scale = Math.min(this.canvas.width / img.width, this.canvas.height / img.height) * 0.85;
-    const dw = img.width * scale;
-    const dh = img.height * scale;
-    this.ctx.drawImage(img, (this.canvas.width - dw) / 2, (this.canvas.height - dh) / 2, dw, dh);
-  }
-
-  addBackgroundObjectsParallax(backgroundObjects) {
-    backgroundObjects.forEach((bg) => {
-      this.ctx.save();
-      const parallaxX = this.camera_x * bg.parallaxSpeed;
-      this.ctx.translate(parallaxX, 0);
-      bg.draw(this.ctx);
-      this.ctx.restore();
-    });
-  }
-
-  addObjectsToMap(objects) {
-    objects.forEach((o) => {
-      this.addToMap(o);
-    });
-  }
-
-  addToMap(mo) {
-    if (mo.otherDirection) {
-      this.flipImage(mo);
-    }
-
-    mo.draw(this.ctx);
-    mo.drawFrame(this.ctx);
-
-    if (mo.otherDirection) {
-      this.flipImageBack(mo);
-    }
-  }
-
-  flipImage(mo) {
-    this.ctx.save();
-    this.ctx.translate(mo.width, 0);
-    this.ctx.scale(-1, 1);
-    mo.x = mo.x * -1;
-  }
-
-  flipImageBack(mo) {
-    mo.x = mo.x * -1;
-    this.ctx.restore();
-  }
-
   /**
-   * @param {number[]} delays
-   * @param {function(number):void} onStep
+   * Starts an image sequence for overlays.
+   * @param {number[]} delays - Delays per step
+   * @param {function(number):void} onStep - Callback per step
    */
   startImageSequence(delays, onStep) {
     let step = 0;
@@ -354,6 +354,9 @@ class World {
     next();
   }
 
+  /**
+   * Shows the win screen and starts the sequence.
+   */
   showGameWon() {
     this.gameWon = true;
     this.audioManager?.playSound("gameWon");
@@ -362,6 +365,9 @@ class World {
     this.startImageSequence([1500, 0], (s) => (this.gameWonStep = s));
   }
 
+  /**
+   * Shows the game over screen and starts the sequence.
+   */
   showGameOver() {
     this.gameOver = true;
     this.audioManager?.playSound("gameOver");
