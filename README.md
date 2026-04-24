@@ -18,7 +18,9 @@ Dive into a humorous adventure, defeat the chickens, and become the hero of El P
 
 ## Demo
 
-> Deploy or open `index.html` directly in a browser. No build step required.
+**Live:** [el-pollo-loco.viktor-wilhelm.de](https://el-pollo-loco.viktor-wilhelm.de/)
+
+> Or open `index.html` directly in a browser. No build step required.
 
 ## Gameplay
 
