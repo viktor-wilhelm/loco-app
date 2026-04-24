@@ -14,13 +14,13 @@ A fast-paced 2D jump & run game for the browser – crafted entirely with vanill
 
 Dive into a humorous adventure, defeat the chickens, and become the hero of El Pollo Loco!
 
+## 🚀 Live Demo
+
+🔗 [Live Demo – el-pollo-loco.viktor-wilhelm.de](https://el-pollo-loco.viktor-wilhelm.de/)
+
+## 📸 Preview
+
 ![El Pollo Loco Screenshot](img/9_intro_outro_screens/start/startscreen_1.png)
-
-## Demo
-
-**Live:** [el-pollo-loco.viktor-wilhelm.de](https://el-pollo-loco.viktor-wilhelm.de/)
-
-> Or open `index.html` directly in a browser. No build step required.
 
 ## Gameplay
 
@@ -39,7 +39,6 @@ Dive into a humorous adventure, defeat the chickens, and become the hero of El P
 - Survive — when your health bar empties, it's game over
 
 ## Architecture
-
 
 The project follows an **OOP class hierarchy** with a single rendering loop via `requestAnimationFrame`.
 
@@ -61,28 +60,28 @@ DrawableObject
 
 **Core files:**
 
-| File                              | Responsibility                                        |
-| --------------------------------- | ----------------------------------------------------- |
-| `js/game.js`                      | Entry point — initialises canvas, world, and keyboard |
-| `js/assets.js`                    | Centralised image/audio asset registry                |
-| `js/fullscreen.js`                | Fullscreen toggle logic                               |
-| `js/include-html.js`              | Loads HTML templates dynamically                      |
-| `js/intervals.js`                 | Manages game intervals/timers                         |
-| `models/world.class.js`           | Game loop, collision detection, draw cycle            |
-| `models/character.class.js`       | Player input, animation states, physics               |
-| `models/chicken.class.js`         | Standard enemy logic                                  |
-| `models/small-chicken.class.js`   | Small enemy logic                                     |
-| `models/boss-chicken.class.js`    | Alternate boss logic                                  |
-| `models/endboss.class.js`         | Main boss logic                                       |
-| `models/coin.class.js`            | Collectible coin logic                                |
-| `models/bottle-pickup.class.js`   | Collectible salsa bottle logic                        |
-| `models/throwable-object.class.js`| Thrown salsa bottle logic                             |
-| `models/background-object.class.js`| Parallax background layers                           |
-| `models/cloud.class.js`           | Decorative cloud logic                                |
-| `models/status-bar.class.js`      | HUD for health, bottles, coins                        |
-| `models/keyboard.class.js`        | Keyboard input handler                                |
-| `models/level.class.js`           | Level data container                                  |
-| `levels/level1.js`                | Enemy, coin, bottle, and background placement         |
+| File                                | Responsibility                                        |
+| ----------------------------------- | ----------------------------------------------------- |
+| `js/game.js`                        | Entry point — initialises canvas, world, and keyboard |
+| `js/assets.js`                      | Centralised image/audio asset registry                |
+| `js/fullscreen.js`                  | Fullscreen toggle logic                               |
+| `js/include-html.js`                | Loads HTML templates dynamically                      |
+| `js/intervals.js`                   | Manages game intervals/timers                         |
+| `models/world.class.js`             | Game loop, collision detection, draw cycle            |
+| `models/character.class.js`         | Player input, animation states, physics               |
+| `models/chicken.class.js`           | Standard enemy logic                                  |
+| `models/small-chicken.class.js`     | Small enemy logic                                     |
+| `models/boss-chicken.class.js`      | Alternate boss logic                                  |
+| `models/endboss.class.js`           | Main boss logic                                       |
+| `models/coin.class.js`              | Collectible coin logic                                |
+| `models/bottle-pickup.class.js`     | Collectible salsa bottle logic                        |
+| `models/throwable-object.class.js`  | Thrown salsa bottle logic                             |
+| `models/background-object.class.js` | Parallax background layers                            |
+| `models/cloud.class.js`             | Decorative cloud logic                                |
+| `models/status-bar.class.js`        | HUD for health, bottles, coins                        |
+| `models/keyboard.class.js`          | Keyboard input handler                                |
+| `models/level.class.js`             | Level data container                                  |
+| `levels/level1.js`                  | Enemy, coin, bottle, and background placement         |
 
 ## Project Structure
 
