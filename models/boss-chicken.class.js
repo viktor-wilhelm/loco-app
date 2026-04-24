@@ -27,6 +27,8 @@ class BossChicken extends MovableObject {
     this.y = y;
     this.world = world;
     this.speed = 0.8 + Math.random() * 0.6;
+    this.patrolOrigin = x;
+    this.patrolDir = Math.random() < 0.5 ? -1 : 1;
     this.applyGravity();
     this.speedY = 6;
     this.animate();
@@ -68,13 +70,13 @@ class BossChicken extends MovableObject {
   animate() {
     setStoppableInterval(() => {
       if (this.isDead) return;
-      if (this.world && this.world.character.x < this.x) {
-        this.x -= this.speed;
-        this.otherDirection = false;
-      } else {
-        this.x += this.speed;
-        this.otherDirection = true;
+      const diff = this.world?.character.x - this.x;
+      if (Math.abs(diff) > 30) {
+        this.patrolDir = diff > 0 ? 1 : -1;
       }
+      this.x += this.patrolDir * this.speed;
+      this.otherDirection = this.patrolDir > 0;
+      if (!this.isAboveGround()) this.y = BossChicken.GROUND_Y;
     }, 1000 / 60);
 
     setStoppableInterval(() => {

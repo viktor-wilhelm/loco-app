@@ -167,17 +167,36 @@ class Endboss extends MovableObject {
   /**
    * Starts all movement and animation intervals for the endboss.
    */
-  animate() {
-    setStoppableInterval(() => {
-      if (!this.world || this.world.paused) return;
-      if (this.isDead) return;
+  /**
+   * Initializes patrol boundaries once the endboss is placed.
+   */
+  initPatrol() {
+    this.patrolOrigin = this.x;
+    this.patrolDir = -1;
+  }
+
+  /**
+   * Moves the endboss: patrol before activation, chase after.
+   */
+  move() {
+    if (!this.activated) {
+      if (!this.patrolOrigin) this.initPatrol();
+      if (this.x <= this.patrolOrigin - 250) this.patrolDir = 1;
+      if (this.x >= this.patrolOrigin + 250) this.patrolDir = -1;
+      this.x += this.patrolDir * this.speed;
+      this.otherDirection = this.patrolDir > 0;
+    } else {
       const facingRight = this.world.character.x > this.x;
       this.otherDirection = facingRight;
-      if (facingRight) {
-        this.x += this.speed;
-      } else {
-        this.moveLeft();
-      }
+      if (facingRight) this.x += this.speed * 6;
+      else this.moveLeft();
+    }
+  }
+
+  animate() {
+    setStoppableInterval(() => {
+      if (!this.world || this.world.paused || this.isDead) return;
+      this.move();
     }, 30);
 
     setStoppableInterval(() => {

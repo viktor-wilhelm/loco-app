@@ -14,8 +14,8 @@ let keyboard = new Keyboard();
 function init() {
   document.querySelector(".preloader").classList.add("preloader--hidden");
   const slider = document.getElementById("volume-slider");
-  const savedVolume = localStorage.getItem("masterVolume");
-  if (savedVolume !== null) slider.value = savedVolume;
+  const savedVolume = parseFloat(localStorage.getItem("masterVolume"));
+  if (savedVolume > 0) slider.value = savedVolume;
   window.masterVolume = parseFloat(slider.value);
   audioManager = new AudioManager(window.masterVolume);
   audioManager.playBackground("menu");
