@@ -109,7 +109,7 @@ class Endboss extends MovableObject {
    * Reduces endboss energy on hit and triggers death or hurt state.
    */
   hit() {
-    this.energy -= 10;
+    this.energy -= 20;
     this.hitCount++;
     if (this.energy <= 0) {
       this.energy = 0;

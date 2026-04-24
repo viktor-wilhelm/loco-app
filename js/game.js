@@ -19,6 +19,7 @@ function init() {
   window.masterVolume = parseFloat(slider.value);
   audioManager = new AudioManager(window.masterVolume);
   audioManager.playBackground("menu");
+  registerAutoplayFallback();
   updateMuteButton();
   updateSliderFill(slider);
   slider.addEventListener("input", () => {
@@ -27,6 +28,18 @@ function init() {
     localStorage.setItem("masterVolume", slider.value);
     updateSliderFill(slider);
   });
+}
+
+/**
+ * Registers one-time event listeners to resume BGM if autoplay was blocked.
+ */
+function registerAutoplayFallback() {
+  const resumeBgm = () => {
+    if (audioManager.bgmElement?.paused) audioManager.bgmElement.play().catch(() => {});
+    else if (!audioManager.bgmElement) audioManager.playBackground("menu");
+  };
+  document.addEventListener("pointerdown", resumeBgm, { once: true });
+  document.addEventListener("keydown", resumeBgm, { once: true });
 }
 
 /**

@@ -22,6 +22,7 @@ class World {
   bottleBar = new StatusBar(80, IMAGES_BOTTLE, 0);
   endbossBar = new StatusBar(125, IMAGES_ENDBOSS_HEALTH);
   throwableObjects = [];
+  throwLastTime = 0;
   activeEnemyInteraction = false;
   gameOver = false;
   gameOverStep = -1;
@@ -114,6 +115,9 @@ class World {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isUsed);
     if (!this.keyboard.THROW_PENDING) return;
     this.keyboard.THROW_PENDING = false;
+    const now = Date.now();
+    if (now - this.throwLastTime < 800) return;
+    this.throwLastTime = now;
     if (this.bottlesCollected > 0) this.throwBottle();
   }
 
@@ -196,7 +200,7 @@ class World {
     enemy.activate();
     enemy.hit();
     enemy.hit();
-    this.endbossBar.setPercentage(enemy.energy);
+    this.endbossBar.setPercentage((enemy.energy / 200) * 100);
     this.character.speedY = 35;
     this.startEndbossKnockback();
     setStoppableTimeout(() => {
@@ -253,7 +257,7 @@ class World {
     if (enemy instanceof Endboss) {
       enemy.activate();
       enemy.hit();
-      this.endbossBar.setPercentage(enemy.energy);
+      this.endbossBar.setPercentage((enemy.energy / 200) * 100);
       this.audioManager?.playSound("enemyHit");
     } else {
       enemy.die();

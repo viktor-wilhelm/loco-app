@@ -52,6 +52,7 @@ class AudioManager {
    */
   constructor(initialVolume = 1) {
     this.volume = this.clampVolume(initialVolume);
+    this.updateVolumeRatios(this.volume);
     this.muted = localStorage.getItem("epl_muted") === "true";
   }
 
